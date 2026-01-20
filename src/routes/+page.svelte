@@ -24,22 +24,49 @@
 
 	// (Deleted $effect as init is done above)
 
+	// Toggle Logic with "Isolate on First Click" behavior
 	function toggleDecade(d) {
-		if (selectedDecades.has(d)) {
-			selectedDecades.delete(d);
+		if (selectedDecades.size === allDecades.length) {
+			// If all are currently selected, isolate the clicked one
+			selectedDecades = new Set([d]);
 		} else {
-			selectedDecades.add(d);
+			// Standard toggle
+			const next = new Set(selectedDecades);
+			if (next.has(d)) {
+				next.delete(d);
+				// If we deleted the last one, maybe select all again? Or leave empty?
+				// User said "deselect all except button pressed", implying we want to drive down to specifics.
+				// If empty, let's reset to ALL to avoid blank screen?
+				if (next.size === 0) {
+					selectedDecades = new Set(allDecades);
+				} else {
+					selectedDecades = next;
+				}
+			} else {
+				next.add(d);
+				// If we added the last one back, we are at ALL state
+				selectedDecades = next;
+			}
 		}
-		selectedDecades = new Set(selectedDecades);
 	}
 
 	function toggleVenue(v) {
-		if (selectedVenues.has(v)) {
-			selectedVenues.delete(v);
+		if (selectedVenues.size === allVenues.length) {
+			selectedVenues = new Set([v]);
 		} else {
-			selectedVenues.add(v);
+			const next = new Set(selectedVenues);
+			if (next.has(v)) {
+				next.delete(v);
+				if (next.size === 0) {
+					selectedVenues = new Set(allVenues);
+				} else {
+					selectedVenues = next;
+				}
+			} else {
+				next.add(v);
+				selectedVenues = next;
+			}
 		}
-		selectedVenues = new Set(selectedVenues);
 	}
 
 	function toggleAllDecades(select) {
@@ -151,7 +178,7 @@
 				? 'border-amber-500 text-amber-500 bg-amber-950/30'
 				: 'border-zinc-800 text-zinc-500 hover:text-zinc-300'} px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all shadow-xl h-full min-h-[44px]"
 		>
-			{showDetailedOnly ? '★ With Setlists' : 'All Gigs'}
+			{showDetailedOnly ? 'Show All Gigs' : '★ Setlists Only'}
 		</button>
 
 		<!-- Main Filter Group -->
