@@ -17,6 +17,7 @@
 	let selectedDecades = $state(new Set(uniqueDecades));
 	let selectedVenues = $state(new Set(uniqueVenues));
 	let showDetailedOnly = $state(false);
+	let searchQuery = $state('');
 
 	// Filters UI state
 	let filtersOpen = $state(false);
