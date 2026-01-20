@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+    /* You can technically put theme extensions here in v4, 
+     but keeping it simple for now as we just need the basics working. */
+}
+
+/* Global Animations */
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+    }
+
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+    }
+}
+
+/* Custom Leaflet Marker Icon */
+.custom-div-icon {
+    background: transparent;
+    border: none;
+}

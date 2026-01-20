@@ -1,0 +1,157 @@
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
+
+	export let venues = [];
+	export let timeline = [];
+	export let activeVenueId = null;
+
+	let observer;
+	let gridElement;
+
+	// Emitting active year or venue for parent to handle map/narrative
+	export let onYearChange = (y) => {};
+	export let onVenueHover = (vId) => {};
+
+	// Simple intersection observer to detect which year/row is visible
+	onMount(() => {
+		if (browser) {
+			const options = {
+				root: null,
+				rootMargin: '-40% 0px -40% 0px', // Active when in middle of screen
+				threshold: 0
+			};
+
+			observer = new IntersectionObserver((entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						const y = parseInt(entry.target.dataset.year);
+						if (!isNaN(y)) onYearChange(y);
+					}
+				});
+			}, options);
+
+			const rows = document.querySelectorAll('.timeline-row');
+			rows.forEach((r) => observer.observe(r));
+		}
+	});
+
+	// Reactive grid style string
+	$: gridStyle = `grid-template-columns: 80px repeat(${venues.length}, minmax(140px, 1fr));`;
+</script>
+
+<div class="w-full relative bg-zinc-950/50 backdrop-blur-sm" bind:this={gridElement}>
+	<!-- Sticky Header -->
+	<div
+		class="sticky top-0 z-20 grid bg-zinc-900/95 border-b border-zinc-700 shadow-xl"
+		style={gridStyle}
+	>
+		<div
+			class="p-3 text-xs font-mono text-zinc-500 border-r border-zinc-800 flex items-center justify-center font-bold tracking-wider"
+		>
+			YEAR
+		</div>
+		{#each venues as venue}
+			<div
+				class="p-3 text-xs font-black text-zinc-400 border-r border-zinc-800 bg-zinc-900 truncate hover:text-white transition-colors cursor-help uppercase tracking-wide text-center flex items-center justify-center {activeVenueId ===
+				venue.id
+					? 'bg-zinc-800 text-white border-b-2 border-b-amber-500'
+					: ''}"
+				title={venue.name}
+				onmouseenter={() => onVenueHover(venue.id)}
+			>
+				{venue.name.replace('The ', '').split(' ')[0]}
+				<!-- Short name -->
+			</div>
+		{/each}
+	</div>
+
+	<!-- Timeline Body -->
+	<div class="divide-y divide-zinc-800 font-mono text-xs">
+		{#each timeline as row}
+			<div
+				class="timeline-row grid hover:bg-zinc-900/40 transition-colors group"
+				data-year={row.year}
+				style={gridStyle}
+			>
+				<div
+					class="p-4 text-zinc-500 border-r border-zinc-800 bg-zinc-950/30 flex flex-col justify-center items-center text-center group-hover:text-zinc-300"
+				>
+					<span class="font-bold text-sm block">{row.year}</span>
+					<span class="text-[9px] uppercase tracking-wider opacity-60"
+						>{new Date(row.year, row.month - 1)
+							.toLocaleString('default', { month: 'short' })
+							.toUpperCase()}</span
+					>
+				</div>
+
+				{#each venues as venue}
+					<!-- svelte-ignore a11y_mouse_events_have_key_events -->
+					<div
+						class="p-4 border-r border-zinc-800/50 flex flex-col justify-center min-h-[60px] relative {activeVenueId ===
+						venue.id
+							? 'bg-zinc-900/50'
+							: ''}"
+						onmouseover={() => onVenueHover(venue.id)}
+					>
+						{#if row.entries[venue.id]}
+							{@const val = row.entries[venue.id]}
+							<!-- Handle Array (Multiple Gigs), Object (Rich Data), or String (Legacy) -->
+							{#if Array.isArray(val)}
+								<div class="flex flex-col gap-3">
+									{#each val as gig}
+										<div class="text-center">
+											<span class="text-zinc-100 font-medium leading-snug break-words block">
+												{gig.artist}
+											</span>
+											{#if gig.has_songs}
+												<div class="mt-0.5" title="Setlist info available">
+													<span
+														class="text-[9px] text-amber-500 font-mono tracking-tighter border border-amber-900/50 bg-amber-950/30 px-1 rounded"
+													>
+														♪ LIST
+													</span>
+												</div>
+											{/if}
+										</div>
+									{/each}
+								</div>
+							{:else if typeof val === 'object' && val !== null}
+								<div class="text-center">
+									<span class="text-zinc-100 font-medium leading-snug break-words block">
+										{val.artist}
+									</span>
+									{#if val.has_songs}
+										<div class="mt-1" title="Setlist info available">
+											<span
+												class="inline-block px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-500 text-[9px] border border-amber-500/20 font-mono"
+											>
+												♪ SONGS
+											</span>
+										</div>
+									{/if}
+								</div>
+							{:else}
+								<span
+									class="text-zinc-100 font-medium leading-snug break-words relative z-10 text-center block"
+								>
+									{val}
+								</span>
+							{/if}
+
+							<!-- Subtle highlight for event -->
+							<div
+								class="absolute inset-x-0 bottom-0 top-0 bg-white/5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity"
+							></div>
+						{/if}
+					</div>
+				{/each}
+			</div>
+		{/each}
+
+		<!-- Empty spacers if sparse data -->
+		{#if timeline.length === 0}
+			<div class="p-10 text-center text-zinc-500">Loading archive data...</div>
+		{/if}
+	</div>
+</div>

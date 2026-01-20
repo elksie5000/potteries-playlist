@@ -1,0 +1,88 @@
+{
+    "setlist": [
+        {
+            "eventDate": "03-07-1973",
+            "venue": {
+                "name": "Hammersmith Odeon",
+                "city": {
+                    "name": "London",
+                    "country": {
+                        "name": "United Kingdom"
+                    }
+                }
+            },
+            "sets": {
+                "set": [
+                    {
+                        "song": [
+                            {
+                                "name": "Ziggy Stardust"
+                            },
+                            {
+                                "name": "Suffragette City"
+                            },
+                            {
+                                "name": "Rock 'n' Roll Suicide"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "eventDate": "25-06-2000",
+            "venue": {
+                "name": "Worthy Farm",
+                "city": {
+                    "name": "Glastonbury",
+                    "country": {
+                        "name": "United Kingdom"
+                    }
+                }
+            },
+            "sets": {
+                "set": [
+                    {
+                        "song": [
+                            {
+                                "name": "Wild Is the Wind"
+                            },
+                            {
+                                "name": "China Girl"
+                            },
+                            {
+                                "name": "Changes"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "eventDate": "22-11-2003",
+            "venue": {
+                "name": "The Point",
+                "city": {
+                    "name": "Dublin",
+                    "country": {
+                        "name": "Ireland"
+                    }
+                }
+            },
+            "sets": {
+                "set": [
+                    {
+                        "song": [
+                            {
+                                "name": "New Killer Star"
+                            },
+                            {
+                                "name": "Rebel Rebel"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}
