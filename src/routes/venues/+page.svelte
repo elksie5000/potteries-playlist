@@ -1,24 +1,13 @@
 <script>
 	import timelineData from '$lib/data/timeline_data.json';
-	import { Line } from 'svelte-chartjs';
 	import { activeGig } from '$lib/stores/modalStore';
-	import {
-		Chart as ChartJS,
-		Title,
-		Tooltip,
-		Legend,
-		LineElement,
-		LinearScale,
-		PointElement,
-		CategoryScale
-	} from 'chart.js';
-
-	ChartJS.register(Title, Tooltip, Legend, LineElement, LinearScale, PointElement, CategoryScale);
+	import { onMount } from 'svelte';
+	import Chart from 'chart.js/auto';
 
 	// Filter Logic
 	const venueConfig = {
 		'Golden Torch': {
-			color: '#eab308',
+			color: '#ca8a04',
 			capacity: 1200,
 			keywords: ['torch'],
 			desc: 'The soul of the 70s. A legendary Northern Soul dungeon.'
@@ -30,19 +19,19 @@
 			desc: "The grand dame. Hanley's premier concert hall for decades."
 		},
 		'Trentham Gardens': {
-			color: '#22c55e',
+			color: '#16a34a',
 			capacity: 3000,
 			keywords: ['trentham'],
 			desc: 'The ballroom era. Hosted the giants of rock in its heyday.'
 		},
 		'The Sugarmill': {
-			color: '#a855f7',
+			color: '#9333ea',
 			capacity: 400,
 			keywords: ['sugarmill'],
 			desc: 'Indie grit. The 90s/00s sweatbox where careers were launched.'
 		},
 		'The Wheatsheaf': {
-			color: '#ef4444',
+			color: '#dc2626',
 			capacity: 250,
 			keywords: ['wheatsheaf'],
 			desc: 'Pub rock royalty. The intimate breeding ground for local angst.'
@@ -76,6 +65,7 @@
 			const yIdx = years.indexOf(y);
 
 			// Check venues in this row
+			// row has keys: Year, Month, DateStr, and venues...
 			const rowVenues = Object.keys(row).filter(
 				(k) => k !== 'Year' && k !== 'Month' && k !== 'DateStr'
 			);
@@ -129,6 +119,7 @@
 
 	const chartOptions = {
 		responsive: true,
+		maintainAspectRatio: false,
 		plugins: {
 			legend: {
 				position: 'bottom',
@@ -147,6 +138,22 @@
 			}
 		}
 	};
+
+	let canvas;
+	let chartInstance;
+
+	onMount(() => {
+		if (canvas) {
+			chartInstance = new Chart(canvas, {
+				type: 'line',
+				data: chartData,
+				options: chartOptions
+			});
+		}
+		return () => {
+			if (chartInstance) chartInstance.destroy();
+		};
+	});
 
 	function openGig(gig) {
 		// Adapt for modal
@@ -177,9 +184,8 @@
 			<h2 class="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-6">
 				Gig Frequency (1965–2010)
 			</h2>
-			<div class="h-[300px] md:h-[400px] w-full">
-				<!-- svelte-ignore a11y_missing_attribute -->
-				<Line data={chartData} options={chartOptions} />
+			<div class="h-[300px] md:h-[400px] w-full relative">
+				<canvas bind:this={canvas}></canvas>
 			</div>
 		</div>
 
@@ -208,6 +214,8 @@
 					<!-- Highlight Cards -->
 					<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
 						{#each venue.highlights as gig}
+							<!-- svelte-ignore a11y_click_events_have_key_events -->
+							<!-- svelte-ignore a11y_no_static_element_interactions -->
 							<div
 								class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl hover:border-zinc-600 transition-colors group cursor-pointer"
 								onclick={() => openGig(gig)}
