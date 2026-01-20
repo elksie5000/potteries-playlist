@@ -1,61 +1,53 @@
-<nav class="sticky top-0 z-50 w-full backdrop-blur-lg bg-zinc-950/70 border-b border-zinc-800">
-	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-		<div class="flex items-center justify-between h-16">
-			<div class="flex-shrink-0">
-				<a
-					href="/"
-					class="text-2xl font-black bg-gradient-to-r from-[#00ff9d] to-[#00ccff] bg-clip-text text-transparent hover:opacity-80 transition-opacity"
-				>
-					POTTERIES PLAYLIST
-				</a>
-			</div>
-			<div class="hidden md:block">
-				<div class="ml-10 flex items-baseline space-x-1">
-					<a
-						href="/slade"
-						class="px-3 py-2 rounded-md text-sm font-medium text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
-						>60s</a
-					>
-					<a
-						href="/torch"
-						class="px-3 py-2 rounded-md text-sm font-medium text-amber-500 hover:text-amber-300 hover:bg-zinc-800 transition-colors"
-						>70s</a
-					>
-					<a
-						href="/victoria"
-						class="px-3 py-2 rounded-md text-sm font-medium text-pink-500 hover:text-pink-300 hover:bg-zinc-800 transition-colors"
-						>80s</a
-					>
-					<a
-						href="/shelleys"
-						class="px-3 py-2 rounded-md text-sm font-medium text-green-500 hover:text-green-300 hover:bg-zinc-800 transition-colors"
-						>90s</a
-					>
-					<a
-						href="/sugarmill"
-						class="px-3 py-2 rounded-md text-sm font-medium text-indigo-500 hover:text-indigo-300 hover:bg-zinc-800 transition-colors"
-						>00s</a
-					>
+<script>
+	import { page } from '$app/stores';
 
-					<span class="mx-2 text-zinc-700">|</span>
+	const links = [
+		{ href: '/', label: 'The Story' },
+		{ href: '/pulse', label: 'The Pulse' },
+		{ href: '/archive', label: 'The Archive' }
+	];
+</script>
 
-					<a
-						href="/heavy-metal"
-						class="px-3 py-2 rounded-md text-sm font-bold text-yellow-500 hover:text-yellow-300 hover:bg-zinc-800 transition-colors tracking-tighter"
-						>METAL</a
-					>
-					<a
-						href="/stoke-gap"
-						class="px-3 py-2 rounded-md text-sm font-medium text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
-						>GAP</a
-					>
-					<a
-						href="/sandbox"
-						class="px-3 py-2 rounded-md text-sm font-medium text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
-						>SANDBOX</a
-					>
-				</div>
-			</div>
+<nav
+	class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 pointer-events-none"
+>
+	<!-- Brand -->
+	<a href="/" class="pointer-events-auto flex flex-col items-start group">
+		<span
+			class="font-black text-xl text-white tracking-tighter uppercase leading-none group-hover:text-amber-500 transition-colors"
+			>Potteries</span
+		>
+		<span
+			class="font-mono text-[10px] text-zinc-500 tracking-[0.2em] uppercase leading-none group-hover:text-zinc-400 transition-colors"
+			>Playlist</span
+		>
+	</a>
+
+	<!-- Links -->
+	<div
+		class="pointer-events-auto bg-zinc-950/80 backdrop-blur-md border border-zinc-800 rounded-full px-6 py-2 flex gap-6 shadow-2xl"
+	>
+		{#each links as link}
+			<a
+				href={link.href}
+				class="text-xs font-bold uppercase tracking-wide transition-colors {$page.url.pathname ===
+				link.href
+					? 'text-amber-500'
+					: 'text-zinc-500 hover:text-zinc-300'}"
+			>
+				{link.label}
+			</a>
+		{/each}
+	</div>
+
+	<!-- Status/Extras -->
+	<div class="hidden md:block w-24 text-right pointer-events-auto">
+		<!-- Placeholder for maybe user login or simple status indicator -->
+		<div class="inline-flex items-center gap-2">
+			<span class="text-[9px] font-mono text-zinc-600 uppercase">Live</span>
+			<div
+				class="h-1.5 w-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]"
+			></div>
 		</div>
 	</div>
 </nav>
