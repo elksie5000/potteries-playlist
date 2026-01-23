@@ -1,5 +1,6 @@
 <script>
 	import { activeGig, closeGig } from '$lib/stores/modalStore';
+	import { fly } from 'svelte/transition';
 
 	let setlistData = $state(null);
 	let loading = $state(false);
@@ -44,124 +45,210 @@
 {#if $activeGig}
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
-	<div
-		class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
-		onclick={closeGig}
-	>
+	<div class="fixed inset-0 z-[100] flex justify-end" role="dialog" aria-modal="true">
+		<!-- Backdrop -->
 		<div
-			class="bg-zinc-900 border border-zinc-700 w-full max-w-md shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]"
+			class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
+			onclick={closeGig}
+		></div>
+
+		<!-- Sidecar Panel -->
+		<div
+			class="relative w-full max-w-2xl bg-zinc-950 border-l border-zinc-800 shadow-2xl h-full flex flex-col transform transition-transform duration-300 ease-out"
+			transition:fly={{ x: 600, duration: 400 }}
 			onclick={(e) => e.stopPropagation()}
 		>
 			<!-- Header -->
-			<div class="bg-zinc-950 p-6 border-b border-zinc-800 relative shrink-0">
+			<div class="bg-zinc-950 p-6 md:p-8 border-b border-zinc-800 relative shrink-0 z-10">
+				<!-- Close Button -->
+				<button
+					class="absolute top-6 right-6 p-2 text-zinc-500 hover:text-white transition-colors z-50"
+					onclick={closeGig}
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						class="h-6 w-6"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke="currentColor"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M6 18L18 6M6 6l12 12"
+						/>
+					</svg>
+				</button>
+
 				<div
-					class="absolute top-0 right-0 p-4 opacity-10 text-9xl font-black leading-none select-none pointer-events-none"
+					class="absolute top-0 right-12 p-4 opacity-10 text-[8rem] font-black leading-none select-none pointer-events-none"
 				>
 					{$activeGig.decade}
 				</div>
 
-				<h3 class="text-amber-500 font-mono text-xs uppercase tracking-widest mb-2">
+				<h3 class="text-amber-500 font-mono text-xs uppercase tracking-widest mb-3">
 					{$activeGig.date} • {$activeGig.venue}
 				</h3>
-				<h2 class="text-3xl font-black text-white leading-tight mb-2">
+				<h2 class="text-4xl md:text-5xl font-black text-white leading-none mb-4 tracking-tighter">
 					{$activeGig.artist}
 				</h2>
 
 				{#if $activeGig.full_lineup && $activeGig.full_lineup !== $activeGig.artist}
-					<p class="text-zinc-500 text-xs mt-2">Full Lineup: {$activeGig.full_lineup}</p>
+					<p class="text-zinc-500 text-sm font-serif">Lineup: {$activeGig.full_lineup}</p>
 				{/if}
 			</div>
 
 			<!-- Scrollable Body -->
-			<div class="p-6 space-y-6 overflow-y-auto">
-				<!-- Setlist Section -->
-				<div class="space-y-3">
-					<h4
-						class="text-xs font-bold text-zinc-400 uppercase tracking-wide border-b border-zinc-800 pb-1"
-					>
-						Setlist
-					</h4>
-
-					<!-- Always show External Link if URL exists -->
-					{#if $activeGig.url}
-						<a
-							href={$activeGig.url}
-							target="_blank"
-							class="mb-4 inline-flex items-center gap-2 text-xs font-bold uppercase text-amber-500 hover:text-white transition-colors border border-amber-500/20 bg-amber-500/10 px-3 py-2 rounded-lg w-full justify-center hover:bg-amber-600 hover:border-amber-600"
+			<div class="flex-1 overflow-y-auto p-6 md:p-8 space-y-8 scrollbar-thin">
+				<!-- Description / Context -->
+				{#if $activeGig.description}
+					<div class="prose prose-invert prose-sm max-w-none">
+						<p
+							class="text-lg text-zinc-300 leading-relaxed font-serif italic border-l-4 border-zinc-800 pl-4"
 						>
-							<span>Open on Setlist.fm</span>
-							<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-								><path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-								></path></svg
+							"{$activeGig.description}"
+						</p>
+					</div>
+				{/if}
+
+				<!-- Media / YouTube -->
+				{#if $activeGig.youtubeId}
+					<div class="border border-zinc-800 bg-black/50 rounded-xl overflow-hidden group">
+						<div
+							class="p-3 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/50"
+						>
+							<h4 class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
+								Archival Material
+							</h4>
+							<span
+								class="text-[9px] font-mono text-amber-600 border border-amber-900/50 bg-amber-950/30 px-2 py-1 rounded"
 							>
-						</a>
-					{/if}
+								⚠️ Tangential Context
+							</span>
+						</div>
+
+						<div class="aspect-video w-full bg-zinc-900">
+							<iframe
+								class="w-full h-full"
+								src="https://www.youtube.com/embed/{$activeGig.youtubeId}"
+								title="YouTube video player"
+								frameborder="0"
+								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+								allowfullscreen
+							></iframe>
+						</div>
+
+						<div class="p-4 bg-zinc-900/80">
+							<p class="text-[10px] text-zinc-500 font-mono leading-relaxed">
+								Disclaimer: Direct footage of this specific night may not exist. This media is
+								provided to establish the <span class="text-zinc-400">sonic texture</span> and
+								<span class="text-zinc-400">visual aesthetic</span> of the era/tour.
+							</p>
+						</div>
+					</div>
+				{/if}
+
+				<!-- Setlist Section -->
+				<div class="space-y-4">
+					<div class="flex items-baseline justify-between border-b border-zinc-800 pb-2">
+						<h4 class="text-sm font-bold text-zinc-300 uppercase tracking-widest">Setlist Data</h4>
+						{#if $activeGig.url}
+							<a
+								href={$activeGig.url}
+								target="_blank"
+								class="text-[10px] font-bold text-zinc-500 hover:text-amber-500 transition-colors uppercase tracking-wide flex items-center gap-1"
+							>
+								Source <span class="opacity-50">↗</span>
+							</a>
+						{/if}
+					</div>
 
 					{#if loading}
-						<div class="animate-pulse flex space-x-4 p-4 border border-zinc-800 rounded">
-							<div class="flex-1 space-y-2 py-1">
-								<div class="h-2 bg-zinc-800 rounded"></div>
-								<div class="h-2 bg-zinc-800 rounded w-5/6"></div>
-								<div class="h-2 bg-zinc-800 rounded w-4/6"></div>
-							</div>
+						<div class="animate-pulse space-y-3">
+							<div class="h-4 bg-zinc-900 rounded w-3/4"></div>
+							<div class="h-4 bg-zinc-900 rounded w-1/2"></div>
+							<div class="h-4 bg-zinc-900 rounded w-5/6"></div>
 						</div>
 					{:else if error}
-						<p class="text-xs text-red-500 italic">{error}</p>
+						<div class="p-4 border border-red-900/20 bg-red-950/10 rounded-lg">
+							<p class="text-xs text-red-400 font-mono">{error}</p>
+						</div>
 					{:else if setlistData && setlistData.sets && setlistData.sets.set}
-						<div class="space-y-4">
-							{#each setlistData.sets.set as set}
-								<div>
-									{#if set.name || set.encore}
-										<h5 class="text-[10px] text-zinc-500 uppercase font-bold mb-1 opacity-70">
-											{set.encore ? `Encore ${set.encore}` : set.name}
-										</h5>
-									{/if}
+						<div class="relative">
+							<!-- "Paper" effect for setlist -->
+							<div
+								class="absolute -left-3 top-0 bottom-0 w-px border-l border-dashed border-zinc-800"
+							></div>
 
-									{#if set.song && set.song.length > 0}
-										<ol class="list-decimal list-outside ml-4 space-y-1">
-											{#each set.song as song}
-												<li class="pl-2 text-sm text-zinc-300 font-mono leading-relaxed">
-													<span class="text-zinc-200">{song.name}</span>
-													{#if song.cover}
-														<span class="text-[10px] text-zinc-500 ml-1 italic"
-															>({song.cover.name} cover)</span
+							<div class="space-y-6">
+								{#each setlistData.sets.set as set}
+									<div>
+										{#if set.name || set.encore}
+											<h5
+												class="text-[10px] text-amber-500/70 uppercase font-black tracking-widest mb-3 pl-4"
+											>
+												{set.encore ? `// Encore ${set.encore}` : `// ${set.name}`}
+											</h5>
+										{/if}
+
+										{#if set.song && set.song.length > 0}
+											<ol class="space-y-3">
+												{#each set.song as song, i}
+													<li
+														class="flex gap-4 group/song hover:bg-zinc-900/50 p-2 rounded -ml-2 transition-colors"
+													>
+														<span class="text-xs font-mono text-zinc-600 w-6 text-right pt-0.5"
+															>{i + 1}.</span
 														>
-													{/if}
-													{#if song.info}
-														<span class="text-[10px] text-zinc-600 ml-1">[{song.info}]</span>
-													{/if}
-												</li>
-											{/each}
-										</ol>
-									{/if}
-								</div>
-							{/each}
+														<div class="flex-1">
+															<div
+																class="text-sm font-bold text-zinc-200 group-hover/song:text-white"
+															>
+																{song.name}
+															</div>
+															{#if song.cover}
+																<div class="text-[10px] text-zinc-500 mt-0.5">
+																	Original by {song.cover.name}
+																</div>
+															{/if}
+															{#if song.info}
+																<div class="text-[10px] text-zinc-600 mt-0.5 font-mono">
+																	[{song.info}]
+																</div>
+															{/if}
+														</div>
+													</li>
+												{/each}
+											</ol>
+										{/if}
+									</div>
+								{/each}
 
-							{#if !setlistData.sets.set.length && $activeGig.has_songs}
-								<p class="text-sm text-zinc-500 italic">No songs found in API response.</p>
-							{/if}
+								{#if !setlistData.sets.set.length && $activeGig.has_songs}
+									<p class="text-sm text-zinc-500 italic pl-4">
+										No individual songs found in this record.
+									</p>
+								{/if}
+							</div>
 						</div>
 					{:else if !$activeGig.has_songs}
-						<p class="text-sm text-zinc-600 italic font-mono">
-							Setlist processing unavailable. Check source link.
-						</p>
+						<div class="p-8 text-center border border-zinc-900 rounded-xl bg-zinc-900/30">
+							<p class="text-sm text-zinc-500 font-serif italic">"The tape matches the silence."</p>
+							<p class="text-[10px] text-zinc-700 uppercase mt-2 tracking-widest font-bold">
+								No Setlist Available
+							</p>
+						</div>
 					{/if}
 				</div>
 			</div>
 
-			<!-- Footer Actions -->
+			<!-- Footer -->
 			<div
-				class="bg-zinc-950 p-4 flex justify-between items-center border-t border-zinc-800 shrink-0"
+				class="bg-zinc-950 p-4 border-t border-zinc-800 flex justify-between items-center text-[10px] text-zinc-600 font-mono uppercase shrink-0"
 			>
-				<button
-					class="text-zinc-500 hover:text-white text-xs uppercase font-bold transition-colors"
-					onclick={closeGig}>Close Record</button
-				>
-				<span class="text-zinc-700 text-[10px] font-mono">ID: {$activeGig.id}</span>
+				<span>Potteries Archive Protocol</span>
+				<span>ID: {$activeGig.id}</span>
 			</div>
 		</div>
 	</div>

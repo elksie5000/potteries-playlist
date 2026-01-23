@@ -237,11 +237,11 @@
 						>
 					</div>
 				</div>
-				<div class="flex flex-wrap gap-x-4 gap-y-2 justify-end">
+				<div class="flex gap-4 overflow-x-auto pb-2 w-full no-scrollbar">
 					{#each allVenues as v}
 						<button
 							onclick={() => toggleVenue(v)}
-							class="text-[10px] uppercase font-bold tracking-tight transition-colors flex items-center gap-1.5 group {selectedVenues.has(
+							class="text-[10px] uppercase font-bold tracking-tight transition-colors flex items-center gap-1.5 flex-shrink-0 group {selectedVenues.has(
 								v
 							)
 								? 'text-zinc-200'

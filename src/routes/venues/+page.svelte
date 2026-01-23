@@ -1,8 +1,7 @@
 <script>
 	import timelineData from '$lib/data/timeline_data.json';
 	import { activeGig } from '$lib/stores/modalStore';
-	import { onMount } from 'svelte';
-	import Chart from 'chart.js/auto';
+	import VenueChart from '$lib/components/VenueChart.svelte';
 
 	// Filter Logic
 	const venueConfig = {
@@ -38,11 +37,6 @@
 		}
 	};
 
-	let chartData = {
-		labels: [],
-		datasets: []
-	};
-
 	let venueProfiles = [];
 
 	// Process Data
@@ -53,7 +47,6 @@
 			)
 		)
 	].sort((a, b) => a - b);
-	chartData.labels = years;
 
 	Object.entries(venueConfig).forEach(([name, cfg]) => {
 		// Init counts
@@ -65,7 +58,6 @@
 			const yIdx = years.indexOf(y);
 
 			// Check venues in this row
-			// row has keys: Year, Month, DateStr, and venues...
 			const rowVenues = Object.keys(row).filter(
 				(k) => k !== 'Year' && k !== 'Month' && k !== 'DateStr'
 			);
@@ -78,7 +70,6 @@
 
 					// Add to potential highlights
 					row[vName].forEach((g) => {
-						// Add context for the card
 						highlights.push({
 							...g,
 							date: row.DateStr,
@@ -90,73 +81,24 @@
 			});
 		});
 
-		// Dataset
-		chartData.datasets.push({
-			label: name,
-			data: counts,
-			borderColor: cfg.color,
-			backgroundColor: cfg.color,
-			tension: 0.4,
-			borderWidth: 2,
-			pointRadius: 0
-		});
-
-		// Select top 3 highlights (prioritize ones with songs/url)
+		// Select top 3 highlights
 		const top3 = highlights
 			.sort((a, b) => {
 				if (a.has_songs && !b.has_songs) return -1;
 				if (!a.has_songs && b.has_songs) return 1;
-				return 0; // maintain order roughly (chronological usually)
+				return 0; // maintain order roughly
 			})
 			.slice(0, 3);
 
 		venueProfiles.push({
 			name,
 			...cfg,
+			counts, // Added for chart
 			highlights: top3
 		});
 	});
 
-	const chartOptions = {
-		responsive: true,
-		maintainAspectRatio: false,
-		plugins: {
-			legend: {
-				position: 'bottom',
-				labels: { color: '#71717a', font: { family: 'monospace' } }
-			},
-			title: { display: false }
-		},
-		scales: {
-			x: {
-				grid: { color: '#27272a' },
-				ticks: { color: '#71717a', font: { family: 'monospace' } }
-			},
-			y: {
-				grid: { color: '#27272a' },
-				ticks: { color: '#71717a' }
-			}
-		}
-	};
-
-	let canvas;
-	let chartInstance;
-
-	onMount(() => {
-		if (canvas) {
-			chartInstance = new Chart(canvas, {
-				type: 'line',
-				data: chartData,
-				options: chartOptions
-			});
-		}
-		return () => {
-			if (chartInstance) chartInstance.destroy();
-		};
-	});
-
 	function openGig(gig) {
-		// Adapt for modal
 		let url = gig.url || '';
 		activeGig.set({
 			...gig,
@@ -168,7 +110,7 @@
 </script>
 
 <div class="min-h-screen bg-zinc-950 text-white pt-24 pb-12 px-6">
-	<div class="max-w-7xl mx-auto space-y-16">
+	<div class="max-w-7xl mx-auto space-y-24">
 		<!-- Header -->
 		<div class="space-y-4 border-b border-zinc-800 pb-8">
 			<h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter text-white">
@@ -179,64 +121,95 @@
 			</p>
 		</div>
 
-		<!-- Chart Section -->
-		<div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 md:p-12 shadow-2xl">
-			<h2 class="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-6">
-				Gig Frequency (1965–2010)
-			</h2>
-			<div class="h-[300px] md:h-[400px] w-full relative">
-				<canvas bind:this={canvas}></canvas>
-			</div>
-		</div>
-
-		<!-- Venue Profiles -->
-		<div class="space-y-24">
+		<!-- Venue Profiles (Chapters) -->
+		<div class="space-y-48">
 			{#each venueProfiles as venue}
-				<div
-					class="grid md:grid-cols-[300px_1fr] gap-12 border-t border-zinc-800 pt-12 items-start"
+				<section
+					class="grid md:grid-cols-[360px_1fr] gap-12 lg:gap-24 border-t border-zinc-800 pt-12 items-start group"
 				>
-					<!-- Info -->
-					<div class="sticky top-24 space-y-6">
-						<h3 class="text-4xl font-black uppercase tracking-tighter" style="color: {venue.color}">
+					<!-- Chapter Head (Sticky) -->
+					<div class="sticky top-28 space-y-8">
+						<!-- Header -->
+						<h3
+							class="text-5xl font-black uppercase tracking-tighter leading-none"
+							style="color: {venue.color}"
+						>
 							{venue.name}
 						</h3>
-						<div class="space-y-2">
-							<p class="text-zinc-300 font-serif text-lg leading-relaxed">{venue.desc}</p>
-							<div class="flex items-center gap-4 text-xs font-mono text-zinc-500 mt-4">
-								<span class="border border-zinc-800 px-2 py-1 rounded">CAP: {venue.capacity}</span>
-								<span class="border border-zinc-800 px-2 py-1 rounded"
-									>DATA POINTS: {venue.highlights.length}+</span
+
+						<!-- Data Chart -->
+						<div class="border-t border-b border-zinc-800 py-6 bg-zinc-900/20 rounded-lg">
+							<div class="flex justify-between items-end mb-2 px-2">
+								<span class="text-[10px] uppercase font-bold text-zinc-500 tracking-widest"
+									>Activity Pulse</span
+								>
+								<span class="text-[10px] font-mono text-zinc-600"
+									>{years[0]} — {years[years.length - 1]}</span
+								>
+							</div>
+							<VenueChart data={venue.counts} {years} color={venue.color} label={venue.name} />
+						</div>
+
+						<!-- Narrative Text Block -->
+						<div class="space-y-4">
+							<p
+								class="text-zinc-300 font-serif text-lg leading-relaxed border-l-2 pl-4"
+								style="border-color: {venue.color}40"
+							>
+								{venue.desc}
+							</p>
+							<div
+								class="flex flex-wrap items-center gap-2 text-[10px] font-mono text-zinc-500 uppercase"
+							>
+								<span class="bg-zinc-900 border border-zinc-800 px-2 py-1 rounded"
+									>Cap: {venue.capacity}</span
+								>
+								<span class="bg-zinc-900 border border-zinc-800 px-2 py-1 rounded"
+									>Total Gigs: {venue.highlights.length}+</span
 								>
 							</div>
 						</div>
 					</div>
 
-					<!-- Highlight Cards -->
-					<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-						{#each venue.highlights as gig}
-							<!-- svelte-ignore a11y_click_events_have_key_events -->
-							<!-- svelte-ignore a11y_no_static_element_interactions -->
-							<div
-								class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl hover:border-zinc-600 transition-colors group cursor-pointer"
-								onclick={() => openGig(gig)}
-							>
-								<div class="text-[10px] font-bold text-zinc-500 uppercase mb-2">{gig.date}</div>
-								<h4
-									class="text-lg font-bold text-white leading-tight mb-2 group-hover:text-amber-500 transition-colors"
+					<!-- Content / Highlights -->
+					<div class="space-y-8">
+						<h4
+							class="text-xs font-bold text-zinc-500 uppercase tracking-widest border-b border-zinc-800 pb-2"
+						>
+							Key Archives
+						</h4>
+						<div class="grid sm:grid-cols-2 gap-4">
+							{#each venue.highlights as gig}
+								<!-- svelte-ignore a11y_click_events_have_key_events -->
+								<!-- svelte-ignore a11y_no_static_element_interactions -->
+								<div
+									class="bg-zinc-900 border border-zinc-800 p-6 rounded-xl hover:border-zinc-500 transition-all hover:translate-x-1 group/card cursor-pointer"
+									onclick={() => openGig(gig)}
 								>
-									{gig.artist}
-								</h4>
-								{#if gig.has_songs}
-									<div
-										class="inline-flex items-center gap-1 text-[10px] uppercase font-bold text-green-500 bg-green-500/10 px-2 py-0.5 rounded"
-									>
-										<span>● Setlist</span>
+									<div class="flex justify-between items-start mb-4">
+										<div class="text-[10px] font-bold text-zinc-500 uppercase">{gig.date}</div>
+										{#if gig.has_songs}
+											<div
+												class="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_4px_rgba(245,158,11,0.5)]"
+											></div>
+										{/if}
 									</div>
-								{/if}
-							</div>
-						{/each}
+									<h4
+										class="text-xl font-bold text-white leading-tight mb-2 group-hover/card:text-amber-500 transition-colors"
+									>
+										{gig.artist}
+									</h4>
+									<div
+										class="mt-4 pt-4 border-t border-zinc-800 text-[10px] text-zinc-600 font-mono flex justify-between"
+									>
+										<span>VIEW RECORD</span>
+										<span class="opacity-0 group-hover/card:opacity-100 transition-opacity">→</span>
+									</div>
+								</div>
+							{/each}
+						</div>
 					</div>
-				</div>
+				</section>
 			{/each}
 		</div>
 	</div>

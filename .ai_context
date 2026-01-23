@@ -1,0 +1,15 @@
+#Potteries Music App: Core Context (.ai_context)
+1. Project Vision
+An interactive, high-performance web archive of the Stoke-on-Trent music scene (1970s–1990s). The goal is to preserve geographic and temporal history through a "Sovereign Asset."
+
+2. Design Philosophy
+• Aesthetic: "Fanzine" style. High-contrast, Grayscale, Xeroxed textures. That said, it should be modern and easy to navigate. Furthermore make it adaapt to the existing timeline dark theme which is in place. 
+
+• Mental Model: Object Permanence. Gigs are "Physical Cards." When the view changes (e.g., Venue -> Band), the cards must "travel" to their new slots, not disappear.
+
+3. Technical Constraints
+• Framework: Svelte / SvelteKit
+
+• Animations: Mandatory use of `crossfade` (send/receive) and `flip` for shared-element transitions.
+
+• Data Stack: Python for ETL (msgspec, glom). DuckDB for analytical SQL on local files.
