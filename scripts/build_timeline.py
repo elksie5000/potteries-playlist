@@ -248,15 +248,33 @@ for g in all_gigs:
         # normalize date to YYYY-MM-DD
         dobj = datetime.strptime(g['date'], "%d-%m-%Y")
         dstr = dobj.strftime("%Y-%m-%d")
-        if dstr not in detail_map:
-            detail_map[dstr] = {}
-        
-        # Handle multiple artists on the same day at the same venue
         if g['venue'] not in detail_map[dstr]:
             detail_map[dstr][g['venue']] = []
         detail_map[dstr][g['venue']].append(g)
     except:
         pass
+
+# 3.5 Genre Mapping
+# Simple heuristic map for the prototype (can be expanded with MusicBrainz later)
+# We map Venue -> Likely Genre as a fallback
+VENUE_GENRE_MAP = {
+    "The Golden Torch": "Soul",
+    "Trentham Gardens": "Rock", # Variety really
+    "The Wheatsheaf": "Rock",   # Pub Rock / Punk
+    "The Sugarmill": "Indie",
+    "Shelleys Laserdrome": "Rave",
+    "Victoria Hall": "Variety"
+}
+
+def guess_genre(artist, venue):
+    # Simple keyword heuristics
+    a = artist.lower()
+    if "orchestra" in a or "comedian" in a: return "Variety"
+    if "sex pistols" in a or "clash" in a or "damned" in a: return "Punk"
+    if "bee gees" in a: return "Pop"
+    
+    # Fallback to Venue Default
+    return VENUE_GENRE_MAP.get(venue, "Other")
 
 # Now build the timeline list manually from compact dates
 output_list = []
@@ -290,10 +308,11 @@ for date_val, row in compact.iterrows():
                 entry[col] = []
                 for gig_item in gig_info_list:
                     entry[col].append({
-                        "artist": gig_item.get('artist', val), # Use original artist if available, else the joined string
+                        "artist": gig_item.get('artist', val),
                         "has_songs": gig_item.get("has_songs", False),
                         "url": gig_item.get("url", ""),
-                        "mbid": gig_item.get("mbid", "")
+                        "mbid": gig_item.get("mbid", ""),
+                        "genre": guess_genre(gig_item.get('artist', val), col)
                     })
             else:
                 # Fallback if for some reason detail_map didn't catch it (e.g., manual entry without full metadata)
@@ -301,7 +320,8 @@ for date_val, row in compact.iterrows():
                     "artist": val,
                     "has_songs": False,
                     "url": "",
-                    "mbid": ""
+                    "mbid": "",
+                    "genre": guess_genre(val, col)
                 }]
             
             # Note: This changes the JSON structure! 

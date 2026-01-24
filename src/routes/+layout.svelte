@@ -2,6 +2,7 @@
 	import '../app.css';
 	import Navbar from '$lib/components/Navbar.svelte';
 	import Sidecar from '$lib/components/Sidecar.svelte';
+	import Footer from '$lib/components/Footer.svelte';
 
 	let { children } = $props();
 </script>
@@ -13,5 +14,6 @@
 	<main class="pt-0">
 		{@render children()}
 	</main>
+	<Footer />
 	<Sidecar />
 </div>
