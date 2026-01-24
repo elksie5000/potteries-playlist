@@ -1,49 +1,52 @@
-import timelineData from '$lib/data/timeline_data.json';
+import { supabaseAdmin } from '$lib/server/supabaseAdmin';
 
 /**
  * PHASE 3: DATA INJECTION (Production Loader)
- * Source: src/lib/data/timeline_data.json (Wide/Pivoted)
+ * Source: Supabase 'gigs' table
  * Target: +page.svelte (Flat Archive Array)
  */
 export const load = async () => {
+    // Fetch all gigs ordered by date (descending for timeline? No, maybe descending is better for initial view, 
+    // but the timeline loop sorts it or expects specific order? 
+    // The previous loader did: archive.sort((a, b) => new Date(b.date) - new Date(a.date)); (DESC)
+    const { data: gigs, error } = await supabaseAdmin
+        .from('gigs')
+        .select('*')
+        .order('date', { ascending: false });
+
+    if (error) {
+        console.error('Supabase load error:', error);
+        return { archive: [], decades: [] };
+    }
+
     let archive = [];
     let decades = new Set();
 
-    // 1. Iterate through the raw source
-    timelineData.forEach((row) => {
-        // Destructure metadata, remaining keys are Venues
-        const { Year, Month, DateStr, ...venues } = row;
+    // ETL: Transform Flat DB Rows -> Timeline Application Shape
+    gigs.forEach((gig) => {
+        const dateObj = new Date(gig.date);
+        const year = dateObj.getFullYear();
+        // Month name from date
+        const monthName = dateObj.toLocaleString('default', { month: 'long' });
+        const decade = Math.floor(year / 10) * 10;
 
-        const yearInt = parseInt(Year);
-        // Calculate Decade (e.g., 1978 -> 1970)
-        const decade = Math.floor(yearInt / 10) * 10;
         decades.add(decade);
 
-        // 2. Flatten Venues (Convert Object Keys to "venue" property)
-        Object.entries(venues).forEach(([venueName, gigs]) => {
-            if (Array.isArray(gigs)) {
-                gigs.forEach((gig) => {
-                    // 3. Inject into Master Archive
-                    archive.push({
-                        id: gig.mbid || `${DateStr}-${venueName}-${gig.artist}`.replace(/\s+/g, '-').toLowerCase(),
-                        date: DateStr,
-                        year: yearInt,
-                        month: Month,
-                        decade: decade,
-                        venue: venueName, // CRITICAL: This connects to the Venue Filter
-                        artist: gig.artist,
-                        has_songs: gig.has_songs || false,
-                        songs: gig.songs || [],
-                        url: gig.url || '',
-                        notes: gig.notes || ''
-                    });
-                });
-            }
+        archive.push({
+            id: gig.id,
+            date: gig.date, // "YYYY-MM-DD"
+            year: year,
+            month: monthName,
+            decade: decade,
+            venue: gig.venue,
+            artist: gig.artist,
+            genre: gig.genre,
+            has_songs: gig.has_songs,
+            songs: gig.songs || [],
+            url: gig.url || '',
+            notes: gig.notes || ''
         });
     });
-
-    // 4. Sort Descending (Newest first)
-    archive.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     return {
         archive,

@@ -310,7 +310,7 @@
 					>
 						<div class="flex justify-between items-center border-b border-zinc-400 pb-1 mb-2">
 							<span class="font-black uppercase text-[10px] tracking-widest text-red-700"
-								>Evening Sentinel</span
+								>The News</span
 							>
 							<span class="font-mono text-[9px] text-zinc-600">{item.year}</span>
 						</div>
