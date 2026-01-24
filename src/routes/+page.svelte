@@ -281,7 +281,7 @@
 			The<br />Potteries<br /><span class="text-amber-600">Playlist</span>
 		</h1>
 		<p class="mt-6 text-zinc-500 font-mono tracking-[0.3em] text-xs uppercase z-10">
-			1965 — 2010 • An Oral History
+			1965 — Present • The Live Archive
 		</p>
 
 		<!-- Background Decor -->
