@@ -329,9 +329,9 @@
 					class="prose prose-invert prose-sm md:prose-base text-zinc-400 space-y-4 font-mono leading-relaxed max-w-2xl"
 				>
 					<p>
-						So said Gary Oldman after the death of <strong>David Bowie</strong> on January 10, 2016. His
-						death didn’t just stop the music; it was going to be the start of a data story about North
-						Staffordshire's place in live music history.
+						So said Gary Oldman after the death of the death of <strong>David Bowie</strong> on January
+						10, 2016. His death didn’t just stop the music; it was going to be the start of a data story
+						about North Staffordshire's place in live music history.
 					</p>
 					<p>
 						But life—and deadlines—intervened. The project stalled while I worked in data for <em
