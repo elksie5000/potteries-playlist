@@ -373,15 +373,7 @@
 									{#if gig.has_songs}
 										<div class="mt-2">
 											{#if showDetailedOnly && gig.songs && gig.songs.length > 0}
-												<ul class="mb-2 list-none space-y-0.5">
-													{#each gig.songs.slice(0, 3) as song}
-														<li
-															class="text-[10px] text-zinc-400 font-mono truncate lowercase before:content-['>'] before:text-amber-600 before:mr-1"
-														>
-															{song}
-														</li>
-													{/each}
-												</ul>
+												<!-- Preview removed to keep cards clean. Full list is in Sidecar. -->
 											{/if}
 											<span
 												class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-amber-500/10 border border-amber-500/20 text-[9px] text-amber-500 rounded uppercase font-bold tracking-wider"
