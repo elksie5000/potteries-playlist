@@ -38,32 +38,64 @@
 
 	// Reactive grid style string
 	$: gridStyle = `grid-template-columns: 80px repeat(${venues.length}, minmax(140px, 1fr));`;
+
+	/* Tier 2: Grid Header (Aligned) */
+	$: headerGridStyle = gridStyle;
+
+	const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#'.split('');
 </script>
 
 <div class="w-full relative bg-zinc-950/50 backdrop-blur-sm" bind:this={gridElement}>
-	<!-- Sticky Header -->
+	<!-- Fixed A-Z Rolodex (Right Flank) -->
 	<div
-		class="sticky top-0 z-20 grid bg-zinc-900/95 border-b border-zinc-700 shadow-xl"
-		style={gridStyle}
+		class="fixed right-2 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-1 items-center opacity-40 hover:opacity-100 transition-opacity hidden md:flex"
 	>
-		<div
-			class="p-3 text-xs font-mono text-zinc-500 border-r border-zinc-800 flex items-center justify-center font-bold tracking-wider"
-		>
-			YEAR
-		</div>
-		{#each venues as venue}
-			<div
-				class="p-3 text-xs font-black text-zinc-400 border-r border-zinc-800 bg-zinc-900 truncate hover:text-white transition-colors cursor-help uppercase tracking-wide text-center flex items-center justify-center {activeVenueId ===
-				venue.id
-					? 'bg-zinc-800 text-white border-b-2 border-b-amber-500'
-					: ''}"
-				title={venue.name}
-				onmouseenter={() => onVenueHover(venue.id)}
+		{#each alphabet as char}
+			<button
+				class="text-[9px] font-mono text-zinc-500 hover:text-amber-500 hover:scale-150 transition-all cursor-pointer"
 			>
-				{venue.name.replace('The ', '').split(' ')[0]}
-				<!-- Short name -->
-			</div>
+				{char}
+			</button>
 		{/each}
+	</div>
+
+	<!-- Two-Tier Sticky Header -->
+	<div class="sticky top-0 z-20 bg-zinc-900/95 border-b border-zinc-700 shadow-xl backdrop-blur-md">
+		<!-- Tier 1: Horizontal Scroll Row (Venue Filters) -->
+		<div
+			class="flex flex-row overflow-x-auto whitespace-nowrap scrollbar-hide border-b border-zinc-800/50 py-2 px-12 gap-2"
+		>
+			{#each venues as venue}
+				<button
+					class="px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider border transition-all
+					{activeVenueId === venue.id
+						? 'bg-zinc-100 text-zinc-900 border-zinc-100'
+						: 'bg-zinc-900 text-zinc-500 border-zinc-800 hover:border-zinc-500 hover:text-zinc-300'}"
+					on:click={() => (activeVenueId = activeVenueId === venue.id ? null : venue.id)}
+				>
+					{venue.name.replace('The ', '')}
+				</button>
+			{/each}
+		</div>
+
+		<!-- Tier 2: Simplified Grid Header -->
+		<div class="grid" style={headerGridStyle}>
+			<div
+				class="p-2 text-[10px] font-mono text-zinc-600 border-r border-zinc-800 flex items-center justify-center font-bold tracking-wider"
+			>
+				YEAR
+			</div>
+			{#each venues as venue}
+				<div
+					class="p-2 text-[10px] font-black text-zinc-500 border-r border-zinc-800 truncate hover:text-zinc-300 transition-colors cursor-help uppercase tracking-wide text-center flex items-center justify-center
+					{activeVenueId === venue.id ? 'bg-zinc-800/50 text-amber-500' : ''}"
+					title={venue.name}
+					onmouseenter={() => onVenueHover(venue.id)}
+				>
+					{venue.name.replace('The ', '').substring(0, 3)}
+				</div>
+			{/each}
+		</div>
 	</div>
 
 	<!-- Timeline Body -->
@@ -155,3 +187,19 @@
 		{/if}
 	</div>
 </div>
+
+<style>
+	/* Layout-specific Encapsulation */
+	.scrollbar-hide {
+		-ms-overflow-style: none; /* IE and Edge */
+		scrollbar-width: none; /* Firefox */
+	}
+	.scrollbar-hide::-webkit-scrollbar {
+		display: none; /* Chrome, Safari and Opera */
+	}
+
+	.rolodex-strip {
+		writing-mode: vertical-rl;
+		text-orientation: mixed;
+	}
+</style>

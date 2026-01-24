@@ -1,15 +1,31 @@
-#Potteries Music App: Core Context (.ai_context)
-1. Project Vision
-An interactive, high-performance web archive of the Stoke-on-Trent music scene (1970s–1990s). The goal is to preserve geographic and temporal history through a "Sovereign Asset."
+## 1. Project Vision & Aesthetic
 
-2. Design Philosophy
-• Aesthetic: "Fanzine" style. High-contrast, Grayscale, Xeroxed textures. That said, it should be modern and easy to navigate. Furthermore make it adaapt to the existing timeline dark theme which is in place. 
+- **Goal:** Sovereign cultural archive of Stoke-on-Trent music (70s–90s).
 
-• Mental Model: Object Permanence. Gigs are "Physical Cards." When the view changes (e.g., Venue -> Band), the cards must "travel" to their new slots, not disappear.
+- **Style:** "Fanzine" / Industrial. High-contrast grayscale.
 
-3. Technical Constraints
-• Framework: Svelte / SvelteKit
+- **Interaction:** Cards must "travel" between views using Svelte `crossfade` for object permanence.
 
-• Animations: Mandatory use of `crossfade` (send/receive) and `flip` for shared-element transitions.
 
-• Data Stack: Python for ETL (msgspec, glom). DuckDB for analytical SQL on local files.
+
+## 2. Structural Requirements (Layout Specifics)
+
+- **Timeline View:** Primary view. Venue filters MUST be a single horizontal line (using `overflow-x-auto`) to clear vertical space for the timeline.
+
+- **Bands View:** Vertical A–Z Rolodex navigation. Bands listed alphabetically with gig cards stacked beneath headers. 
+
+- **Bands Filters:** Filter by Alphabet, Genre (5-category), and Setlist Toggle.
+
+- **Venues View:** Vertical history containers. Header -> Data Chart -> Narrative text box for Stoke-on-Trent live music history.
+
+- **Detail View:** Sidecar/window panel for "Classics" and Band details. Support for text, images, and YouTube embeds (clearly labeled as "tangential context").
+
+
+
+## 3. Technical Stack
+
+- **Frontend:** SvelteKit + Tailwind.
+
+- **Animations:** Svelte `crossfade` and `flip`.
+
+- **Backend/Data:** Python (msgspec, glom) for ETL. DuckDB for local SQL analysis.
