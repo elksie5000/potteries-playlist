@@ -14,8 +14,23 @@ export const load = async () => {
             Object.entries(venues).forEach(([venueName, venueGigs]) => {
                 if (Array.isArray(venueGigs)) {
                     venueGigs.forEach((g, idx) => {
+                        const safeArtist = g.artist ? g.artist.replace(/[^a-z0-9]/gi, '') : 'unknown';
+                        const uniqueId = `${DateStr}-${venueName.replace(/[^a-z0-9]/gi, '')}-${idx}-${safeArtist}`;
+
+                        // Dummy Setlist Injection
+                        let songs = g.songs || [];
+                        if (g.has_songs && songs.length === 0) {
+                            songs = [
+                                'Anarchy in the UK',
+                                'God Save the Queen',
+                                'Pretty Vacant',
+                                'Holiday in the Sun',
+                                'Bodies'
+                            ];
+                        }
+
                         gigs.push({
-                            id: `${DateStr}-${venueName}-${idx}`,
+                            id: uniqueId,
                             date: DateStr,
                             year: year,
                             month: Month,
@@ -23,6 +38,7 @@ export const load = async () => {
                             venue: venueName,
                             artist: g.artist,
                             has_songs: g.has_songs || false,
+                            songs: songs,
                             url: g.url || '',
                             mbid: g.mbid || '',
                             full_lineup: g.artist
