@@ -1,91 +1,52 @@
-import { stokeVenues } from '$lib/config/music-config';
 import timelineData from '$lib/data/timeline_data.json';
 
-export async function load() {
-    // 1. Define Columns matching the JSON keys
-    const targetIds = [
-        "63d27eaf", // Golden Torch
-        "73d490f1", // Victoria Hall (Config ID - OLD, but we map to Name below)
-        "63d76a7f", // Shelleys
-        "33d490f1", // Sugarmill (Config ID)
-        "3bd490f1", // Wheatsheaf (Config ID)
-        "bingley",  // Bingley Hall (Mock ID)
-        "6bd6ee66", // Trentham (Config ID - OLD)
-        "port-vale",
-        "harold-clowes",
-        "the-place"
-    ];
+/**
+ * PHASE 3: DATA INJECTION (Production Loader)
+ * Source: src/lib/data/timeline_data.json (Wide/Pivoted)
+ * Target: +page.svelte (Flat Archive Array)
+ */
+export const load = async () => {
+    let archive = [];
+    let decades = new Set();
 
-    const venues = stokeVenues.filter(v => targetIds.includes(v.id));
+    // 1. Iterate through the raw source
+    timelineData.forEach((row) => {
+        // Destructure metadata, remaining keys are Venues
+        const { Year, Month, DateStr, ...venues } = row;
 
-    // 2. Transform JSON -> Component Data
-    // Name -> ID Map
-    // CRITICAL: The python script found NEW IDs for some venues, but the JSON keys are still the Venue NAMES ("Trentham Gardens").
-    // We just need to map "Trentham Gardens" -> "6bd6ee66" (the ID our frontend uses to identify the column).
-    // The mismatch of REAL IDs doesn't matter for the frontend column key, as long as we map Name -> FrontendID.
+        const yearInt = parseInt(Year);
+        // Calculate Decade (e.g., 1978 -> 1970)
+        const decade = Math.floor(yearInt / 10) * 10;
+        decades.add(decade);
 
-    const nameToId = {};
-    venues.forEach(v => {
-        nameToId[v.name] = v.id;
-    });
-
-    // Explicit Overrides to ensure matches with Python "Name" keys
-    nameToId["Bingley Hall"] = "bingley";
-    nameToId["Shelleys Laserdrome"] = "63d76a7f";
-    nameToId["Port Vale Stadium"] = "port-vale";
-    nameToId["Harold Clowes Hall"] = "harold-clowes";
-    nameToId["The Place"] = "the-place";
-    nameToId["The Golden Torch"] = "63d27eaf";
-    nameToId["Trentham Gardens"] = "6bd6ee66";
-    nameToId["Victoria Hall"] = "73d490f1";
-    nameToId["The Wheatsheaf"] = "3bd490f1";
-    nameToId["The Sugarmill"] = "33d490f1";
-
-    const timeline = timelineData.map(row => {
-        const entries = {};
-
-        Object.keys(row).forEach(key => {
-            const mappedId = nameToId[key];
-            if (mappedId && row[key]) {
-                entries[mappedId] = row[key];
-            }
-        });
-
-        let monthInt = 1;
-        if (typeof row.Month === 'string') {
-            const d = new Date(`${row.Month} 1, 2000`);
-            if (!isNaN(d)) monthInt = d.getMonth() + 1;
-        } else {
-            monthInt = row.Month || 1;
-        }
-
-        // Augment with Dummy Setlists
-        Object.values(entries).forEach(gigList => {
-            if (Array.isArray(gigList)) {
-                gigList.forEach(gig => {
-                    if (gig && gig.has_songs && !gig.songs) {
-                        gig.songs = [
-                            'Anarchy in the UK',
-                            'God Save the Queen',
-                            'Pretty Vacant',
-                            'Holiday in the Sun',
-                            'Bodies'
-                        ];
-                    }
+        // 2. Flatten Venues (Convert Object Keys to "venue" property)
+        Object.entries(venues).forEach(([venueName, gigs]) => {
+            if (Array.isArray(gigs)) {
+                gigs.forEach((gig) => {
+                    // 3. Inject into Master Archive
+                    archive.push({
+                        id: gig.mbid || `${DateStr}-${venueName}-${gig.artist}`.replace(/\s+/g, '-').toLowerCase(),
+                        date: DateStr,
+                        year: yearInt,
+                        month: Month,
+                        decade: decade,
+                        venue: venueName, // CRITICAL: This connects to the Venue Filter
+                        artist: gig.artist,
+                        has_songs: gig.has_songs || false,
+                        songs: gig.songs || [],
+                        url: gig.url || '',
+                        notes: gig.notes || ''
+                    });
                 });
             }
         });
-
-        return {
-            year: row.Year,
-            month: monthInt,
-            dateStr: row.DateStr,
-            entries
-        };
     });
 
+    // 4. Sort Descending (Newest first)
+    archive.sort((a, b) => new Date(b.date) - new Date(a.date));
+
     return {
-        venues,
-        timeline
+        archive,
+        decades: Array.from(decades).sort((a, b) => a - b)
     };
-}
+};
