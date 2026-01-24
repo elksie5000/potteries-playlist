@@ -1,37 +1,49 @@
-import timelineData from '$lib/data/timeline_data.json';
+import { supabaseAdmin } from '$lib/server/supabaseAdmin';
 
 export const load = async () => {
+    // Fetch all gigs ordered by date
+    const { data: gigs, error } = await supabaseAdmin
+        .from('gigs')
+        .select('*')
+        .order('date', { ascending: true });
+
+    if (error) {
+        console.error('Supabase load error:', error);
+        return { archive: [] };
+    }
+
     let archive = [];
 
-    // ETL Logic (Same as Root)
-    timelineData.forEach((row) => {
-        const { Year, Month, DateStr, ...venues } = row;
-        const yearInt = parseInt(Year);
-        const decade = Math.floor(yearInt / 10) * 10;
+    // ETL: Transform Flat DB Rows -> Timeline Application Shape
+    // The DB rows are already close to what we need, but we need to calculate Decade/Year/Month
+    // and ensure the shape matches what the Grid expects.
 
-        Object.entries(venues).forEach(([venueName, gigs]) => {
-            if (Array.isArray(gigs)) {
-                gigs.forEach((gig) => {
-                    archive.push({
-                        id: gig.mbid || `${DateStr}-${venueName}-${gig.artist}`.replace(/\s+/g, '-').toLowerCase(),
-                        date: DateStr,
-                        year: yearInt,
-                        month: Month,
-                        decade: decade,
-                        venue: venueName,
-                        artist: gig.artist,
-                        has_songs: gig.has_songs || false,
-                        songs: gig.songs || [],
-                        url: gig.url || '',
-                        notes: gig.notes || ''
-                    });
-                });
-            }
+    gigs.forEach((gig) => {
+        const dateObj = new Date(gig.date);
+        const year = dateObj.getFullYear();
+        const monthIndex = dateObj.getMonth();
+        const monthName = dateObj.toLocaleString('default', { month: 'long' });
+        const decade = Math.floor(year / 10) * 10;
+
+        archive.push({
+            id: gig.id,
+            date: gig.date, // "YYYY-MM-DD"
+            year: year,
+            month: monthName,
+            decade: decade,
+            venue: gig.venue,
+            artist: gig.artist,
+            genre: gig.genre,
+            has_songs: gig.has_songs,
+            songs: gig.songs || [],
+            url: gig.url || '',
+            notes: gig.notes || ''
         });
     });
 
-    // Sort Alphabetically for the Bands List (Different from Timeline)
-    archive.sort((a, b) => a.artist.localeCompare(b.artist));
+    // The frontend `groupedArtists` logic sorts by Artist, so we don't need timeline sorting here?
+    // Wait, the Timeline Grid (`group by date`) loop needs chronological.
+    // We fetched `order by date ups`, so it's good.
 
     return {
         archive

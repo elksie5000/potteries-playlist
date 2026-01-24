@@ -39,6 +39,7 @@
 		"vite": "^7.2.6"
 	},
 	"dependencies": {
+		"@supabase/supabase-js": "^2.91.1",
 		"chart.js": "^4.5.1",
 		"cheerio": "^1.2.0",
 		"leaflet": "^1.9.4"
