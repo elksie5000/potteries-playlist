@@ -21,3 +21,7 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# AI/Planning
+PLAN.md
+POTTERIES_MASTER_SPEC.md
