@@ -1,3 +1,6 @@
+
+STRICT RULE: The Timeline MUST be a Horizontal Grid. Vertical layouts are strictly forbidden and count as a failure.
+
 ## 1. Project Vision & Aesthetic
 
 - **Goal:** Sovereign cultural archive of Stoke-on-Trent music (70s–90s).
@@ -29,3 +32,5 @@
 - **Animations:** Svelte `crossfade` and `flip`.
 
 - **Backend/Data:** Python (msgspec, glom) for ETL. DuckDB for local SQL analysis.
+
+

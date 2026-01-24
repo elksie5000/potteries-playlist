@@ -168,97 +168,75 @@
 	<!-- FILTER CONTROLS (Floating) -->
 	<!-- FILTER CONTROLS (Fixed Top Right) -->
 	<!-- FILTER CONTROLS (Fixed Top Right) -->
-	<div
-		class="fixed top-20 right-6 z-40 flex items-start gap-4 pointer-events-auto origin-top-right scale-90 md:scale-100 hidden md:flex"
+	<!-- Sticky Header / Filter Bar -->
+	<header
+		class="fixed top-20 left-0 right-0 z-40 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800 transition-transform duration-300"
 	>
-		<!-- Detailed Filter Toggle -->
-		<button
-			onclick={() => (showDetailedOnly = !showDetailedOnly)}
-			class="bg-zinc-950/90 backdrop-blur-md border {showDetailedOnly
-				? 'border-amber-500 text-amber-500 bg-amber-950/30'
-				: 'border-zinc-800 text-zinc-500 hover:text-zinc-300'} px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all shadow-xl h-full min-h-[44px]"
-		>
-			{showDetailedOnly ? 'Show All Gigs' : '★ Setlists Only'}
-		</button>
-
-		<!-- Main Filter Group -->
-		<div
-			class="bg-zinc-950/90 backdrop-blur-md border border-zinc-800 p-4 rounded-xl shadow-2xl flex gap-8"
-		>
-			<!-- Eras Column -->
-			<div class="flex flex-col gap-3 border-r border-zinc-800 pr-8">
-				<div class="flex justify-between items-center">
-					<span class="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">Eras</span>
-					<div class="flex gap-2">
-						<button
-							onclick={() => toggleAllDecades(true)}
-							class="text-[8px] font-bold uppercase text-zinc-600 hover:text-white transition-colors"
-							>All</button
-						>
-						<span class="text-[8px] text-zinc-700">/</span>
-						<button
-							onclick={() => toggleAllDecades(false)}
-							class="text-[8px] font-bold uppercase text-zinc-600 hover:text-white transition-colors"
-							>None</button
-						>
-					</div>
+		<div class="px-6 py-2 flex flex-col gap-2">
+			<!-- Row 1: Venues (Horizontal Scroll) -->
+			<div class="flex items-center gap-4">
+				<div class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest shrink-0">
+					Venues
 				</div>
-				<div class="flex gap-1.5">
-					{#each allDecades as d}
-						<button
-							class="px-2 py-1.5 text-[10px] uppercase font-mono border rounded transition-all {selectedDecades.has(
-								d
-							)
-								? 'bg-amber-600 border-amber-500 text-white shadow-lg shadow-amber-900/50'
-								: 'border-zinc-800 bg-zinc-900 text-zinc-600 hover:border-zinc-600 hover:text-zinc-400'}"
-							onclick={() => toggleDecade(d)}
-						>
-							{d}s
-						</button>
-					{/each}
-				</div>
-			</div>
-
-			<!-- Venues Column -->
-			<div class="flex flex-col gap-3 max-w-[340px]">
-				<div class="flex justify-between items-center">
-					<span class="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">Venues</span>
-					<div class="flex gap-2">
-						<button
-							onclick={() => toggleAllVenues(true)}
-							class="text-[8px] font-bold uppercase text-zinc-600 hover:text-white transition-colors"
-							>All</button
-						>
-						<span class="text-[8px] text-zinc-700">/</span>
-						<button
-							onclick={() => toggleAllVenues(false)}
-							class="text-[8px] font-bold uppercase text-zinc-600 hover:text-white transition-colors"
-							>None</button
-						>
-					</div>
-				</div>
-				<div class="flex gap-4 overflow-x-auto pb-2 w-full no-scrollbar">
+				<div class="flex gap-2 overflow-x-auto no-scrollbar mask-gradient-r">
+					<button
+						onclick={() => toggleAllVenues(!selectedVenues.size)}
+						class="px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider border transition-all shrink-0
+						{selectedVenues.size === allVenues.length
+							? 'bg-zinc-800 text-zinc-300 border-zinc-700'
+							: 'bg-zinc-900 text-zinc-600 border-zinc-800'}"
+					>
+						All
+					</button>
 					{#each allVenues as v}
 						<button
 							onclick={() => toggleVenue(v)}
-							class="text-[10px] uppercase font-bold tracking-tight transition-colors flex items-center gap-1.5 flex-shrink-0 group {selectedVenues.has(
-								v
-							)
-								? 'text-zinc-200'
-								: 'text-zinc-700 hover:text-zinc-500 line-through decoration-zinc-800'}"
+							class="px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider border transition-all shrink-0 whitespace-nowrap
+							{selectedVenues.has(v)
+								? 'bg-zinc-100 text-zinc-900 border-zinc-100'
+								: 'bg-zinc-900 text-zinc-500 border-zinc-800 hover:border-zinc-600 hover:text-zinc-300'}"
 						>
-							<span
-								class="w-2 h-2 rounded-full {selectedVenues.has(v)
-									? 'bg-amber-500 shadow-[0_0_6px_rgba(245,158,11,0.5)]'
-									: 'bg-zinc-800'} transition-colors"
-							></span>
 							{v.replace('The ', '')}
 						</button>
 					{/each}
 				</div>
 			</div>
+
+			<!-- Row 2: Eras & Toggle (Compact) -->
+			<div class="flex items-center justify-between border-t border-zinc-800/50 pt-2">
+				<div class="flex items-center gap-4">
+					<div class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest shrink-0">
+						Eras
+					</div>
+					<div class="flex gap-1.5">
+						{#each allDecades as d}
+							<button
+								class="px-2 py-0.5 text-[10px] uppercase font-mono border rounded transition-all {selectedDecades.has(
+									d
+								)
+									? 'bg-amber-600 border-amber-500 text-white'
+									: 'border-zinc-800 bg-zinc-900 text-zinc-600 hover:text-zinc-400'}"
+								onclick={() => toggleDecade(d)}
+							>
+								{d}s
+							</button>
+						{/each}
+					</div>
+				</div>
+
+				<button
+					onclick={() => (showDetailedOnly = !showDetailedOnly)}
+					class="text-[9px] uppercase font-bold tracking-widest transition-colors flex items-center gap-2
+					{showDetailedOnly ? 'text-amber-500' : 'text-zinc-500 hover:text-zinc-300'}"
+				>
+					<div
+						class="w-1.5 h-1.5 rounded-full {showDetailedOnly ? 'bg-amber-500' : 'bg-zinc-700'}"
+					></div>
+					{showDetailedOnly ? 'Setlists Only' : 'All Gigs'}
+				</button>
+			</div>
 		</div>
-	</div>
+	</header>
 
 	<!-- Intro Section -->
 	<section
