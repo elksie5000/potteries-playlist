@@ -307,122 +307,112 @@
 			1965 — Present • The Live Archive
 		</p>
 
-		<!-- Background Decor -->
 		<div
 			class="absolute inset-0 z-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-800 to-transparent"
 		></div>
-	</section>
 
-	<!-- CLASSICS / NARRATIVE SECTION -->
-	<section
-		class="min-w-[90vw] md:min-w-[60vw] h-full snap-center bg-zinc-950 border-r border-zinc-900 relative overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-800 p-8 md:p-16 flex flex-col justify-center"
-	>
-		<!-- PROSE -->
-		<div class="max-w-2xl mx-auto mb-16 border-l-4 border-amber-500 pl-6 md:pl-12 py-2">
-			<h2
-				class="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white mb-6 leading-[0.9]"
-			>
-				The Lost <br /> <span class="text-amber-500">Tapes</span>
-			</h2>
-			<div
-				class="prose prose-invert prose-sm md:prose-base text-zinc-400 space-y-4 font-mono leading-relaxed"
-			>
-				<p>
-					This project began in the silence following January 10, 2016. The death of <strong
-						class="text-white">David Bowie</strong
-					>
-					didn’t just stop the music; it triggered a forensic audit of memory. Amid the global tributes,
-					a local fact resurfaced: the Starman had walked among us. He played
-					<span class="text-white bg-zinc-900 px-1">Victoria Hall</span> in 1973, at the absolute zenith
-					of Glam Rock.
-				</p>
-				<p>
-					It raised a question: <em>Who else?</em>
-				</p>
-				<p>
-					The answer lay buried in the <a
-						href="https://www.setlist.fm"
-						target="_blank"
-						class="text-amber-500 hover:underline">setlist.fm</a
-					> database. Over 2,500 gigs. A timeline that proves Stoke-on-Trent wasn't just a flyover state
-					for rock and roll—it was a crucible.
-				</p>
-				<p>
-					From the sweaty walls of <strong class="text-white">The Golden Torch</strong> in Tunstall
-					where Northern Soul found its feet, to <strong class="text-white">The Place</strong> in
-					Hanley hosting The Who. We hosted the chaos of the
-					<strong class="text-white">Sex Pistols</strong>
-					era (often misremembered, but never forgotten) and the anthems of
-					<strong class="text-white">Oasis</strong>
-					at the Wheatsheaf on the very day they released <em>Supersonic</em>.
-				</p>
-				<p class="text-amber-500 font-bold uppercase tracking-widest text-xs">
-					This is not nostalgia. It is evidence.
-				</p>
+		<!-- Scrollable Content within Intro -->
+		<div
+			class="relative z-10 w-full max-w-4xl mx-auto px-6 pt-20 pb-10 overflow-y-auto no-scrollbar max-h-[70vh] text-center md:text-left mt-10"
+		>
+			<!-- PROSE -->
+			<div class="mb-16 border-l-4 border-amber-500 pl-6 md:pl-12 py-2 text-left">
+				<h2
+					class="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-6 leading-[0.9]"
+				>
+					The Lost <br /> <span class="text-amber-500">Tapes</span>
+				</h2>
+				<div
+					class="prose prose-invert prose-sm md:prose-base text-zinc-400 space-y-4 font-mono leading-relaxed max-w-2xl"
+				>
+					<p>
+						This project began in the silence following January 10, 2016. The death of <strong
+							class="text-white">David Bowie</strong
+						>
+						didn’t just stop the music; it triggered a forensic audit of memory. Amid the global tributes,
+						a local fact resurfaced: the Starman had walked among us. He played
+						<span class="text-white bg-zinc-900 px-1">Victoria Hall</span> in 1973, at the absolute zenith
+						of Glam Rock.
+					</p>
+					<p>
+						It raised a question: <em>Who else?</em>
+					</p>
+					<p>
+						The answer lay buried in the <a
+							href="https://www.setlist.fm"
+							target="_blank"
+							class="text-amber-500 hover:underline">setlist.fm</a
+						> database. Over 2,500 gigs. A timeline that proves Stoke-on-Trent wasn't just a flyover state
+						for rock and roll—it was a crucible.
+					</p>
+					<p>
+						From the sweaty walls of <strong class="text-white">The Golden Torch</strong> in
+						Tunstall where Northern Soul found its feet, to
+						<strong class="text-white">The Place</strong>
+						in Hanley hosting The Who. We hosted the chaos of the
+						<strong class="text-white">Sex Pistols</strong>
+						era (often misremembered, but never forgotten) and the anthems of
+						<strong class="text-white">Oasis</strong>
+						at the Wheatsheaf on the very day they released <em>Supersonic</em>.
+					</p>
+					<p class="text-amber-500 font-bold uppercase tracking-widest text-xs">
+						This is not nostalgia. It is evidence.
+					</p>
+				</div>
 			</div>
-		</div>
 
-		<!-- KEY EVIDENCE GRID -->
-		<div class="max-w-5xl mx-auto w-full">
-			<h3
-				class="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-6 border-b border-zinc-800 pb-2"
-			>
-				Key Evidence type: Class A
-			</h3>
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-				{#each classicGigs as classic}
-					{@const realGig = data.archive.find(
-						(g) =>
-							g.artist.toLowerCase() === classic.artist.toLowerCase() && g.date === classic.date
-					)}
+			<!-- KEY EVIDENCE GRID (Compact) -->
+			<div class="w-full text-left">
+				<h3
+					class="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-6 border-b border-zinc-800 pb-2"
+				>
+					Key Evidence type: Class A
+				</h3>
+				<div class="grid grid-cols-1 gap-4">
+					{#each classicGigs as classic}
+						{@const realGig = data.archive.find(
+							(g) =>
+								g.artist.toLowerCase() === classic.artist.toLowerCase() && g.date === classic.date
+						)}
 
-					<!-- If we find the real gig, allow opening the drawer. If not, just show static card (fallback). -->
-					<button
-						class="text-left group border border-zinc-800 bg-zinc-900/40 p-5 hover:border-amber-500/50 hover:bg-zinc-900/80 transition-all duration-300 relative overflow-hidden"
-						onclick={() => realGig && openDrawer('gig', realGig)}
-						disabled={!realGig}
-					>
-						{#if !realGig}
-							<div
-								class="absolute inset-0 bg-red-500/10 z-0 flex items-center justify-center pointer-events-none"
-							>
-								<span
-									class="text-[10px] font-mono text-red-500 -rotate-12 border border-red-500 px-1 uppercase"
-									>Archival Miss</span
+						<button
+							class="text-left group border border-zinc-800 bg-zinc-900/40 p-4 hover:border-amber-500/50 hover:bg-zinc-900/80 transition-all duration-300 relative overflow-hidden flex items-center justify-between"
+							onclick={() => realGig && openDrawer('gig', realGig)}
+							disabled={!realGig}
+						>
+							{#if !realGig}
+								<div
+									class="absolute inset-0 bg-red-500/10 z-0 flex items-center justify-center pointer-events-none"
 								>
-							</div>
-						{/if}
+									<span
+										class="text-[10px] font-mono text-red-500 -rotate-12 border border-red-500 px-1 uppercase"
+										>Archival Miss</span
+									>
+								</div>
+							{/if}
 
-						<div class="relative z-10">
-							<div class="flex justify-between items-start mb-3">
-								<span class="text-amber-500 font-bold text-xs tracking-tight font-mono"
-									>{classic.date}</span
-								>
-								<div class="flex gap-1 flex-wrap justify-end">
-									{#each classic.tags as tag}
-										<span
-											class="text-[9px] uppercase border border-zinc-700 px-1.5 py-0.5 text-zinc-500 group-hover:border-zinc-500 group-hover:text-zinc-400 bg-zinc-950"
-											>{tag}</span
-										>
-									{/each}
+							<div class="relative z-10 flex-1">
+								<div class="flex justify-between items-baseline mb-1">
+									<h3 class="text-lg font-black text-white uppercase tracking-tighter leading-none">
+										{classic.artist}
+									</h3>
+									<span class="text-amber-500 font-bold text-[10px] tracking-tight font-mono ml-2"
+										>{classic.date}</span
+									>
+								</div>
+								<div class="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">
+									{classic.venue}
 								</div>
 							</div>
-							<h3
-								class="text-xl font-black text-white uppercase tracking-tighter mb-1 leading-none"
-							>
-								{classic.artist}
-							</h3>
-							<div class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-3">
-								{classic.venue}
-							</div>
-							<p
-								class="text-xs text-zinc-400 leading-relaxed border-t border-zinc-800 pt-3 group-hover:border-zinc-700 font-serif opacity-80 group-hover:opacity-100"
-							>
-								{classic.notes}
-							</p>
-						</div>
-					</button>
-				{/each}
+						</button>
+					{/each}
+				</div>
+			</div>
+
+			<div class="mt-8 text-center animate-pulse">
+				<span class="text-xs font-mono text-zinc-600 uppercase tracking-widest"
+					>Swipe Right to Begin ➔</span
+				>
 			</div>
 		</div>
 	</section>
