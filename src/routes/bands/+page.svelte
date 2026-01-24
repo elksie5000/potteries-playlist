@@ -99,7 +99,7 @@
 		<header
 			class="flex-shrink-0 bg-zinc-900 border-b border-zinc-800 p-4 flex items-center justify-between z-10"
 		>
-			<div class="flex items-center gap-4">
+			<div class="flex items-center gap-4 pl-20 md:pl-0">
 				<h1 class="text-xl font-black text-zinc-100 uppercase tracking-tight">Bands</h1>
 				<div class="flex gap-2">
 					<select
