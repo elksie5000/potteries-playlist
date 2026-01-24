@@ -1,6 +1,7 @@
-<script lang="ts">
+<script>
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
+	import { openGig } from '$lib/stores/modalStore';
 
 	export let venues = [];
 	export let timeline = [];
@@ -128,11 +129,16 @@
 					>
 						{#if row.entries[venue.id]}
 							{@const val = row.entries[venue.id]}
+							import {openGig} from '$lib/stores/modalStore'; // ... existing imports ... // ... (inside
+							the loop) ...
 							<!-- Handle Array (Multiple Gigs), Object (Rich Data), or String (Legacy) -->
 							{#if Array.isArray(val)}
 								<div class="flex flex-col gap-3">
 									{#each val as gig}
-										<div class="text-center">
+										<button
+											class="text-center w-full hover:bg-white/5 rounded p-1 transition-colors cursor-pointer text-left"
+											onclick={() => openGig(gig)}
+										>
 											<span class="text-zinc-100 font-medium leading-snug break-words block">
 												{gig.artist}
 											</span>
@@ -145,11 +151,14 @@
 													</span>
 												</div>
 											{/if}
-										</div>
+										</button>
 									{/each}
 								</div>
 							{:else if typeof val === 'object' && val !== null}
-								<div class="text-center">
+								<button
+									class="text-center w-full hover:bg-white/5 rounded p-1 transition-colors cursor-pointer"
+									onclick={() => openGig(val)}
+								>
 									<span class="text-zinc-100 font-medium leading-snug break-words block">
 										{val.artist}
 									</span>
@@ -162,7 +171,7 @@
 											</span>
 										</div>
 									{/if}
-								</div>
+								</button>
 							{:else}
 								<span
 									class="text-zinc-100 font-medium leading-snug break-words relative z-10 text-center block"

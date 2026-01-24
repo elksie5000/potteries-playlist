@@ -3,6 +3,7 @@
 
 	const links = [
 		{ href: '/', label: 'Timeline' },
+		{ href: '/timeline', label: 'Grid' },
 		{ href: '/classics', label: 'Classics' },
 		{ href: '/venues', label: 'Venues' }
 	];
