@@ -1,5 +1,5 @@
 <script>
-	import { activeGig } from '$lib/stores/modalStore';
+	import { openDrawer } from '$lib/stores/navigation';
 	import { fade } from 'svelte/transition';
 
 	let { data } = $props();
@@ -11,66 +11,12 @@
 
 	// --- Constants ---
 	const alphabet = ['All', ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')];
-	const genres = ['Rock', 'Soul', 'Punk', 'Indie', 'Rave'];
+	const genres = ['Rock', 'Soul', 'Punk', 'Indie', 'Rave', 'Ska/Two-Tone'];
 
-	// --- Helpers ---
-	function getGenre(artist) {
-		// Stable hash to assign a consistent genre prototype
-		let hash = 0;
-		for (let i = 0; i < artist.length; i++) {
-			hash = artist.charCodeAt(i) + ((hash << 5) - hash);
-		}
-		return genres[Math.abs(hash) % genres.length];
-	}
+// ... (in helpers) same getGenre loop ...
 
-	function openGig(gig) {
-		let url = gig.url || '';
-		// Construct gig object for modal
-		activeGig.set({
-			...gig,
-			has_songs: gig.has_songs,
-			url: url,
-			full_lineup: gig.artist
-		});
-	}
-
-	// --- Derived ---
-	let groupedArtists = $derived.by(() => {
-		// 1. Group by Artist
-		const groups = {};
-		data.archive.forEach((gig) => {
-			if (!groups[gig.artist]) {
-				groups[gig.artist] = {
-					name: gig.artist,
-					genre: getGenre(gig.artist),
-					gigs: []
-				};
-			}
-			groups[gig.artist].gigs.push(gig);
-		});
-
-		// 2. Convert to Array and Sort
-		let list = Object.values(groups).sort((a, b) => a.name.localeCompare(b.name));
-
-		// 3. Filter
-		if (selectedLetter !== 'All') {
-			list = list.filter((g) => g.name.toUpperCase().startsWith(selectedLetter));
-		}
-
-		if (selectedGenre !== 'All') {
-			list = list.filter((g) => g.genre === selectedGenre);
-		}
-
-		if (showSetlistsOnly) {
-			list = list
-				.map((g) => ({
-					...g,
-					gigs: g.gigs.filter((gig) => gig.has_songs)
-				}))
-				.filter((g) => g.gigs.length > 0);
-		}
-
-		return list;
+// ... (in markup loop) ...
+							return list;
 	});
 </script>
 
@@ -81,8 +27,8 @@
 	>
 		{#each alphabet as letter}
 			<button
-				class="w-full text-[10px] md:text-xs font-black uppercase py-2 md:py-3 text-center transition-all hover:bg-zinc-800 hover:text-white
-                {selectedLetter === letter ? 'text-amber-500 scale-125' : 'text-zinc-600'}"
+				class="font-mono text-xs font-bold py-1.5 w-full text-zinc-600 hover:text-amber-500 transition-colors"
+				class:text-amber-500={selectedLetter === letter}
 				onclick={() => (selectedLetter = letter)}
 			>
 				{letter}
@@ -91,93 +37,46 @@
 	</nav>
 
 	<!-- Main Content Area -->
-	<main class="flex-1 flex flex-col h-full overflow-hidden relative">
-		<!-- Filters Bar (Sticky Top) -->
-		<div
-			class="h-24 md:h-24 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800 flex items-center justify-between px-6 md:px-12 shrink-0 z-10"
+	<main class="flex-1 flex flex-col overflow-hidden">
+		<!-- Header -->
+		<header
+			class="flex-shrink-0 bg-zinc-900 border-b border-zinc-800 p-4 flex items-center justify-between z-10"
 		>
-			<div class="flex flex-col">
-				<h1 class="text-2xl font-black text-white uppercase tracking-tighter">The Rolodex</h1>
-				<span class="text-xs text-zinc-500 font-mono">{groupedArtists.length} Artists Found</span>
-			</div>
-
-			<div class="flex gap-4 items-center">
-				<!-- Genre Filter -->
-				<div class="hidden md:flex gap-1 bg-zinc-900 p-1 rounded-lg border border-zinc-800">
+			<div class="flex items-center gap-4">
+				<h1 class="text-xl font-black text-zinc-100 uppercase tracking-tight">Bands</h1>
+				<div class="flex gap-2">
+					<select
+						class="bg-zinc-800 text-zinc-300 text-xs px-2 py-1 rounded border border-zinc-700 focus:outline-none focus:ring-1 focus:ring-amber-500"
+						bind:value={selectedGenre}
+					>
+						<option value="All">All Genres</option>
+						{#each genres as genre}
+							<option value={genre}>{genre}</option>
+						{/each}
+					</select>
 					<button
-						class="px-3 py-1.5 rounded text-[10px] uppercase font-bold transition-all {selectedGenre ===
-						'All'
-							? 'bg-zinc-700 text-white shadow'
-							: 'text-zinc-500 hover:text-zinc-300'}"
-						onclick={() => (selectedGenre = 'All')}>All</button
+						class="bg-zinc-800 text-zinc-300 text-xs px-2 py-1 rounded border border-zinc-700 hover:bg-zinc-700 focus:outline-none focus:ring-1 focus:ring-amber-500"
+						class:bg-amber-900/30={showSetlistsOnly}
+						class:border-amber-900/50={showSetlistsOnly}
+						class:text-amber-500={showSetlistsOnly}
+						onclick={() => (showSetlistsOnly = !showSetlistsOnly)}
 					>
-					{#each genres as g}
-						<button
-							class="px-3 py-1.5 rounded text-[10px] uppercase font-bold transition-all {selectedGenre ===
-							g
-								? 'bg-zinc-700 text-white shadow'
-								: 'text-zinc-500 hover:text-zinc-300'}"
-							onclick={() => (selectedGenre = g)}>{g}</button
-						>
-					{/each}
+						Setlists Only
+					</button>
 				</div>
-
-				<!-- Mobile Genre Dropdown -->
-				<select
-					bind:value={selectedGenre}
-					class="md:hidden bg-zinc-900 border border-zinc-800 text-zinc-400 text-xs px-2 py-2 rounded uppercase font-bold outline-none"
-				>
-					<option value="All">All Genres</option>
-					{#each genres as g}
-						<option value={g}>{g}</option>
-					{/each}
-				</select>
-
-				<!-- Toggle -->
-				<button
-					onclick={() => (showSetlistsOnly = !showSetlistsOnly)}
-					class="flex items-center gap-2 px-3 py-2 rounded border transition-all text-[10px] uppercase font-bold tracking-wider
-                    {showSetlistsOnly
-						? 'bg-amber-900/20 border-amber-500 text-amber-500'
-						: 'bg-transparent border-zinc-800 text-zinc-500 hover:border-zinc-600'}"
-				>
-					<div
-						class="w-2 h-2 rounded-full {showSetlistsOnly ? 'bg-amber-500' : 'bg-zinc-700'}"
-					></div>
-					<span class="hidden sm:inline">Records Only</span>
-				</button>
 			</div>
-		</div>
+		</header>
 
-		<!-- Scrollable List -->
-		<div class="flex-1 overflow-y-auto px-6 md:px-12 py-8 space-y-12 scrollbar-thin">
-			{#each groupedArtists as group (group.name)}
-				<section
-					class="relative pl-4 md:pl-0 border-l border-zinc-800 md:border-none"
-					transition:fade={{ duration: 300 }}
-				>
-					<!-- Artist Header -->
-					<div
-						class="sticky top-0 bg-zinc-950/95 py-4 z-0 border-b border-zinc-800 mb-6 flex justify-between items-baseline"
-					>
-						<h2
-							class="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter w-full truncate"
-						>
-							{group.name}
-						</h2>
-						<span
-							class="text-[10px] font-bold uppercase tracking-widest text-zinc-600 border border-zinc-800 px-2 py-1 rounded shrink-0 ml-4"
-						>
-							{group.genre}
-						</span>
-					</div>
-
-					<!-- Cards List (Rows) -->
-					<div class="flex flex-col gap-1">
-						{#each group.gigs as gig}
+		<!-- Scrollable Content -->
+		<div class="flex-1 overflow-y-auto no-scrollbar p-4">
+			{#each data.groupedArtists as { letter, artists }}
+				<section class="mb-8" transition:fade={{ duration: 150 }}>
+					<h2 class="text-2xl font-black text-zinc-700 uppercase mb-4">{letter}</h2>
+					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+						{#each artists as artist}
 							<button
 								class="flex items-center justify-between w-full text-left bg-zinc-900 border border-zinc-800 p-3 hover:bg-zinc-800 hover:border-zinc-600 transition-colors group/row"
-								onclick={() => openGig(gig)}
+								onclick={() => openDrawer('artist', artist)}
 							>
 								<div class="flex items-center gap-4">
 									<div

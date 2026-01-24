@@ -175,7 +175,7 @@
 		<div class="px-6 py-2 flex flex-col gap-2">
 			<!-- Row 1: Venues (Horizontal Scroll) -->
 			<div class="flex items-center gap-4">
-				<div class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest shrink-0">
+				<div class="w-16 text-[10px] font-bold text-zinc-500 uppercase tracking-widest shrink-0">
 					Venues
 				</div>
 				<div class="flex gap-2 overflow-x-auto no-scrollbar mask-gradient-r">
@@ -205,7 +205,7 @@
 			<!-- Row 2: Eras & Toggle (Compact) -->
 			<div class="flex items-center justify-between border-t border-zinc-800/50 pt-2">
 				<div class="flex items-center gap-4">
-					<div class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest shrink-0">
+					<div class="w-16 text-[10px] font-bold text-zinc-500 uppercase tracking-widest shrink-0">
 						Eras
 					</div>
 					<div class="flex gap-1.5">
@@ -226,11 +226,13 @@
 
 				<button
 					onclick={() => (showDetailedOnly = !showDetailedOnly)}
-					class="text-[9px] uppercase font-bold tracking-widest transition-colors flex items-center gap-2
-					{showDetailedOnly ? 'text-amber-500' : 'text-zinc-500 hover:text-zinc-300'}"
+					class="px-3 py-1 rounded border text-[10px] uppercase font-bold tracking-widest transition-colors flex items-center gap-2
+					{showDetailedOnly
+						? 'text-amber-500 border-amber-500/50 bg-amber-950/20'
+						: 'text-zinc-500 border-zinc-800 bg-zinc-900 hover:text-zinc-300'}"
 				>
 					<div
-						class="w-1.5 h-1.5 rounded-full {showDetailedOnly ? 'bg-amber-500' : 'bg-zinc-700'}"
+						class="w-1.5 h-1.5 rounded-full {showDetailedOnly ? 'bg-amber-500' : 'bg-zinc-600'}"
 					></div>
 					{showDetailedOnly ? 'Setlists Only' : 'All Gigs'}
 				</button>
