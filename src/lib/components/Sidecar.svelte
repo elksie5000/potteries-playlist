@@ -138,6 +138,18 @@
 						</div>
 					{/if}
 
+					<!-- Notes -->
+					{#if gig.notes}
+						<div class="bg-zinc-900/50 p-4 border border-zinc-800 border-l-4 border-l-zinc-700">
+							<div class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">
+								Notes
+							</div>
+							<p class="text-xs text-zinc-300 font-mono leading-relaxed whitespace-pre-wrap">
+								{gig.notes}
+							</p>
+						</div>
+					{/if}
+
 					<!-- Spacer -->
 					<div class="h-12 border-l border-dashed border-zinc-800 ml-2"></div>
 				</div>
