@@ -17,14 +17,14 @@
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		class="fixed inset-0 bg-black/20 backdrop-blur-[2px] z-40"
+		class="fixed inset-0 bg-black/50 backdrop-blur-[2px] z-[90] cursor-pointer"
 		onclick={closeDrawer}
 		transition:fly={{ duration: 200, opacity: 0 }}
 	></div>
 
 	<!-- Sidecar Panel -->
 	<div
-		class="fixed top-0 right-0 h-full w-full md:w-[33vw] md:min-w-[400px] bg-zinc-950 border-l border-zinc-800 z-50 shadow-2xl overflow-y-auto"
+		class="fixed top-0 right-0 h-full w-[85vw] md:w-[33vw] md:min-w-[400px] bg-zinc-950 border-l border-amber-500/50 z-[100] shadow-2xl overflow-y-auto"
 		transition:fly={{ x: 400, duration: 400, easing: quintOut, opacity: 1 }}
 	>
 		<!-- Header / Controls -->
