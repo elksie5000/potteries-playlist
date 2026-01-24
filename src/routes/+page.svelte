@@ -1,7 +1,16 @@
 <script>
-	import { openGig } from '$lib/stores/modalStore';
+	import { openDrawer, activeDrawer } from '$lib/stores/navigation';
 	import { newsEvents } from '$lib/config/news-config';
 	import { fade, fly } from 'svelte/transition';
+	import { send } from '$lib/utils/animation';
+
+	let activeDrawerVal = $state(null);
+
+	// Subscribe to store
+	$effect(() => {
+		const unsubscribe = activeDrawer.subscribe((v) => (activeDrawerVal = v));
+		return unsubscribe;
+	});
 
 	let { data } = $props();
 
@@ -313,38 +322,62 @@
 					class="relative z-20 flex-1 overflow-y-auto pr-2 space-y-3 mt-4 scrollbar-thin scrollbar-thumb-zinc-800 hover:scrollbar-thumb-zinc-600 scrollbar-track-transparent"
 				>
 					{#each item.gigs as gig}
-						<button
-							class="w-full text-left p-3 rounded backdrop-blur-sm transition-all hover:scale-[1.02] hover:shadow-xl group/card border
-                            {getVenueColor(gig.venue)}
-                            {gig.has_songs ? 'border-l-4 border-l-amber-400 pl-4' : ''}"
-							onclick={() => openDrawer('gig', gig)}
-						>
-							<div class="flex justify-between items-baseline mb-1">
-								<span class="text-[9px] font-bold text-zinc-400 uppercase tracking-wider"
-									>{gig.date}</span
-								>
-								<span
-									class="text-[9px] font-mono text-zinc-500 uppercase truncate max-w-[80px] text-right"
-									>{gig.venue}</span
-								>
-							</div>
-							<div
-								class="font-black text-zinc-200 text-sm leading-tight group-hover/card:text-white transition-colors"
-							>
-								{gig.artist}
-							</div>
+						{@const isSelected =
+							activeDrawerVal?.type === 'gig' &&
+							(activeDrawerVal.data.id === gig.id ||
+								(activeDrawerVal.data.artist === gig.artist &&
+									activeDrawerVal.data.date === gig.date))}
 
-							<!-- Metadata badges -->
-							{#if gig.has_songs}
-								<div class="mt-2 flex gap-2">
-									<span
-										class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-amber-500/10 border border-amber-500/20 text-[9px] text-amber-500 rounded uppercase font-bold tracking-wider"
-									>
-										♪ Setlist
-									</span>
+						<!-- svelte-ignore a11y_click_events_have_key_events -->
+						<div class="relative">
+							<!-- Ghost Placeholder (keeps layout space) -->
+							{#if isSelected}
+								<div
+									class="w-full p-3 rounded border border-transparent opacity-0 pointer-events-none"
+								>
+									<div class="h-4"></div>
+									<div class="h-4"></div>
 								</div>
 							{/if}
-						</button>
+
+							<!-- Moving Card -->
+							{#if !isSelected}
+								<button
+									class="w-full text-left p-3 rounded backdrop-blur-sm transition-all hover:scale-[1.02] hover:shadow-xl group/card border
+									{getVenueColor(gig.venue)}
+									{gig.has_songs ? 'border-l-4 border-l-amber-400 pl-4' : ''}
+									absolute top-0 left-0"
+									onclick={() => openDrawer('gig', gig)}
+									out:send={{ key: gig.id || gig.artist + gig.date }}
+								>
+									<div class="flex justify-between items-baseline mb-1">
+										<span class="text-[9px] font-bold text-zinc-400 uppercase tracking-wider"
+											>{gig.date}</span
+										>
+										<span
+											class="text-[9px] font-mono text-zinc-500 uppercase truncate max-w-[80px] text-right"
+											>{gig.venue}</span
+										>
+									</div>
+									<div
+										class="font-black text-zinc-200 text-sm leading-tight group-hover/card:text-white transition-colors"
+									>
+										{gig.artist}
+									</div>
+
+									<!-- Metadata badges -->
+									{#if gig.has_songs}
+										<div class="mt-2 flex gap-2">
+											<span
+												class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-amber-500/10 border border-amber-500/20 text-[9px] text-amber-500 rounded uppercase font-bold tracking-wider"
+											>
+												♪ Setlist
+											</span>
+										</div>
+									{/if}
+								</button>
+							{/if}
+						</div>
 					{/each}
 				</div>
 

@@ -59,19 +59,21 @@
 				.filter((g) => g.gigs.length > 0);
 		}
 
-        // 4. Group by Letter for the Loop
-        const letters = {};
-        list.forEach(g => {
-            const l = g.name[0].toUpperCase();
-            if (!letters[l]) letters[l] = [];
-            letters[l].push(g);
-        });
+		// 4. Group by Letter for the Loop
+		const letters = {};
+		list.forEach((g) => {
+			const l = g.name[0].toUpperCase();
+			if (!letters[l]) letters[l] = [];
+			letters[l].push(g);
+		});
 
-        // 5. Return Array for #each
-		return Object.keys(letters).sort().map(l => ({
-            letter: l,
-            artists: letters[l]
-        }));
+		// 5. Return Array for #each
+		return Object.keys(letters)
+			.sort()
+			.map((l) => ({
+				letter: l,
+				artists: letters[l]
+			}));
 	});
 </script>
 
@@ -110,10 +112,9 @@
 						{/each}
 					</select>
 					<button
-						class="bg-zinc-800 text-zinc-300 text-xs px-2 py-1 rounded border border-zinc-700 hover:bg-zinc-700 focus:outline-none focus:ring-1 focus:ring-amber-500"
-						class:bg-amber-900/30={showSetlistsOnly}
-						class:border-amber-900/50={showSetlistsOnly}
-						class:text-amber-500={showSetlistsOnly}
+						class="bg-zinc-800 text-zinc-300 text-xs px-2 py-1 rounded border border-zinc-700 hover:bg-zinc-700 focus:outline-none focus:ring-1 focus:ring-amber-500 {showSetlistsOnly
+							? 'bg-amber-900/30 border-amber-900/50 text-amber-500'
+							: ''}"
 						onclick={() => (showSetlistsOnly = !showSetlistsOnly)}
 					>
 						Setlists Only
@@ -145,8 +146,10 @@
 										{group.name}
 									</div>
 								</div>
-								
-								<div class="hidden sm:block text-[10px] text-zinc-600 uppercase font-mono tracking-widest group-hover/row:text-zinc-500">
+
+								<div
+									class="hidden sm:block text-[10px] text-zinc-600 uppercase font-mono tracking-widest group-hover/row:text-zinc-500"
+								>
 									View →
 								</div>
 							</button>

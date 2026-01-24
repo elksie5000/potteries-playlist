@@ -2,6 +2,7 @@
 	import { fly } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import { activeDrawer, closeDrawer } from '$lib/stores/navigation';
+	import { receive } from '$lib/utils/animation';
 
 	// Subscribe to the store
 	let drawerState = $state(null);
@@ -48,7 +49,7 @@
 				{@const gig = drawerState.data}
 				<div class="space-y-8">
 					<!-- Hero -->
-					<div>
+					<div in:receive={{ key: gig.id || gig.artist + gig.date }}>
 						<h1 class="text-4xl font-black text-white uppercase tracking-tighter leading-none mb-2">
 							{gig.artist}
 						</h1>
