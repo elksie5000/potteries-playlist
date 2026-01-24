@@ -71,7 +71,7 @@
 					{activeVenueId === venue.id
 						? 'bg-zinc-100 text-zinc-900 border-zinc-100'
 						: 'bg-zinc-900 text-zinc-500 border-zinc-800 hover:border-zinc-500 hover:text-zinc-300'}"
-					on:click={() => (activeVenueId = activeVenueId === venue.id ? null : venue.id)}
+					onclick={() => (activeVenueId = activeVenueId === venue.id ? null : venue.id)}
 				>
 					{venue.name.replace('The ', '')}
 				</button>
