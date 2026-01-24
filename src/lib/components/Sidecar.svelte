@@ -6,10 +6,44 @@
 
 	// Subscribe to the store
 	let drawerState = $state(null);
+	let isFetchingSetlist = $state(false);
 
-	// Log updates for debugging
-	activeDrawer.subscribe((val) => {
+	// Log updates & Fetch if needed
+	activeDrawer.subscribe(async (val) => {
 		drawerState = val;
+		if (
+			val &&
+			val.type === 'gig' &&
+			val.data.has_songs &&
+			(!val.data.songs || val.data.songs.length === 0)
+		) {
+			// Need to fetch
+			isFetchingSetlist = true;
+			try {
+				const res = await fetch(`/api/setlist?url=${encodeURIComponent(val.data.url)}`);
+				if (res.ok) {
+					const json = await res.json();
+					if (json.songs && json.songs.length > 0) {
+						// Update the LOCAL state only (doesn't persist to store unless we write back)
+						// For display purposes, updating drawerState.data is enough if Svelte reactivity catches it.
+						// Svelte 5 state is deep reactive usually?
+						// Wait, drawerState is derived from store. Mutating it might not trigger UI if it's not a primitive replacement.
+						// Let's force update.
+						val.data.songs = json.songs;
+						// Trigger reactivity? assigning to drawerState again might work?
+						// Or just let Svelte 5 handle mutation of state object?
+						// I'll reassign drawerState to be safe.
+						drawerState = { ...val };
+					}
+				}
+			} catch (e) {
+				console.error('Fetch failed', e);
+			} finally {
+				isFetchingSetlist = false;
+			}
+		} else {
+			isFetchingSetlist = false;
+		}
 	});
 </script>
 
@@ -68,9 +102,15 @@
 					<!-- Metadata -->
 					{#if gig.has_songs}
 						<div class="bg-zinc-900 p-4 border border-zinc-800">
-							<div class="text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-2">
-								Setlist
+							<div
+								class="text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-2 flex justify-between items-center"
+							>
+								<span>Setlist</span>
+								{#if isFetchingSetlist}
+									<span class="animate-pulse text-amber-500">Loading...</span>
+								{/if}
 							</div>
+
 							{#if gig.songs && gig.songs.length > 0}
 								<div class="mb-4">
 									<ol class="list-decimal list-inside space-y-1">
@@ -79,6 +119,8 @@
 										{/each}
 									</ol>
 								</div>
+							{:else if !isFetchingSetlist}
+								<div class="mb-4 text-xs text-zinc-500 font-mono">No tracks found.</div>
 							{/if}
 
 							<p class="text-zinc-400 text-sm italic">
