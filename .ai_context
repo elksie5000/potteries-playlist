@@ -1,36 +1,40 @@
+# Potteries Music App: SOVEREIGN CONTEXT
 
-STRICT RULE: The Timeline MUST be a Horizontal Grid. Vertical layouts are strictly forbidden and count as a failure.
+## 1. The Vision (Non-Negotiable)
+- **Identity:** A brutalist, industrial archive of Stoke-on-Trent music (1970s–2000s).
+- **Metaphor:** The "Fanzine" and the "Rolodex." Not a social feed. Not a gallery.
+- **Aesthetic:** High-contrast grayscale (Zinc-950 to White). Amber-500 accents only.
+- **Typography:** Monospace (`font-mono`) for data. Sans-serif (`font-sans`) for narrative.
+- **Styling Rules:**
+  - NO rounded corners (Use `rounded-none`).
+  - NO soft shadows (Use `border` and `outline`).
+  - NO "cards" that float; everything is grounded in the grid.
 
-## 1. Project Vision & Aesthetic
+## 2. Strict Architecture (Do Not Deviate)
+The app is restricted to exactly THREE (3) primary routes. Creating new top-level routes is FORBIDDEN.
 
-- **Goal:** Sovereign cultural archive of Stoke-on-Trent music (70s–90s).
+1. **`src/routes/+page.svelte` (The Timeline)**
+   - **Layout:** Horizontal scroll only.
+   - **Components:** `TimelineRow`, `VenueFilterBar` (Sticky, Single-Row, Scrollable).
+   - **Behavior:** The "Main Tape."
 
-- **Style:** "Fanzine" / Industrial. High-contrast grayscale.
+2. **`src/routes/bands/+page.svelte` (The Index)**
+   - **Layout:** Vertical List (A-Z).
+   - **Components:** `RolodexStrip` (Right flank, fixed), `BandHeader` (Alphabetical dividers).
+   - **Behavior:** The "Phonebook." Clicking a band opens the **Sidecar**.
 
-- **Interaction:** Cards must "travel" between views using Svelte `crossfade` for object permanence.
+3. **`src/routes/venues/+page.svelte` (The Geography)**
+   - **Layout:** Vertical Dashboard.
+   - **Components:** `LeafletMap` (Top), `VenueHistory` (Below).
+   - **Behavior:** The "Atlas."
 
+## 3. The "Sidecar" Pattern
+- **Rule:** We DO NOT open new pages for details.
+- **Implementation:** Details (Gigs, Bands, "Classics") open in a **Fixed Right-Panel Overlay** (The Sidecar).
+- **Tech:** Svelte `fly` transition from right. `z-index: 50`.
 
-
-## 2. Structural Requirements (Layout Specifics)
-
-- **Timeline View:** Primary view. Venue filters MUST be a single horizontal line (using `overflow-x-auto`) to clear vertical space for the timeline.
-
-- **Bands View:** Vertical A–Z Rolodex navigation. Bands listed alphabetically with gig cards stacked beneath headers. 
-
-- **Bands Filters:** Filter by Alphabet, Genre (5-category), and Setlist Toggle.
-
-- **Venues View:** Vertical history containers. Header -> Data Chart -> Narrative text box for Stoke-on-Trent live music history.
-
-- **Detail View:** Sidecar/window panel for "Classics" and Band details. Support for text, images, and YouTube embeds (clearly labeled as "tangential context").
-
-
-
-## 3. Technical Stack
-
-- **Frontend:** SvelteKit + Tailwind.
-
-- **Animations:** Svelte `crossfade` and `flip`.
-
-- **Backend/Data:** Python (msgspec, glom) for ETL. DuckDB for local SQL analysis.
-
-
+## 4. Technical Stack Constraints
+- **Framework:** SvelteKit (Svelte 5 syntax preferred).
+- **Styling:** Tailwind CSS.
+- **Maps:** Leaflet (OpenStreetMap tiles, Grayscale filter).
+- **Data:** Local JSON/DuckDB. No external DB calls yet.
