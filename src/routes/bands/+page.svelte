@@ -11,17 +11,8 @@
 
 	// --- Constants ---
 	const alphabet = ['All', ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')];
-	const genres = ['Rock', 'Soul', 'Punk', 'Indie', 'Rave', 'Ska/Two-Tone'];
-
-	// --- Helpers ---
-	function getGenre(artist) {
-		// Stable hash
-		let hash = 0;
-		for (let i = 0; i < artist.length; i++) {
-			hash = artist.charCodeAt(i) + ((hash << 5) - hash);
-		}
-		return genres[Math.abs(hash) % genres.length];
-	}
+	// Updated to match Python script buckets
+	const genres = ['Rock', 'Soul', 'Punk', 'Indie', 'Rave', 'Pop', 'Variety', 'Other'];
 
 	// --- Derived ---
 	let groupedArtists = $derived.by(() => {
@@ -31,7 +22,8 @@
 			if (!groups[gig.artist]) {
 				groups[gig.artist] = {
 					name: gig.artist,
-					genre: getGenre(gig.artist),
+					// Use direct genre from data (or fallback)
+					genre: gig.genre || 'Other',
 					gigs: []
 				};
 			}
