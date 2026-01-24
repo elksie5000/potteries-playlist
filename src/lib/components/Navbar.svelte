@@ -3,8 +3,7 @@
 
 	const links = [
 		{ href: '/', label: 'Timeline' },
-		{ href: '/timeline', label: 'Grid' },
-		{ href: '/classics', label: 'Classics' },
+		{ href: '/bands', label: 'Bands' },
 		{ href: '/venues', label: 'Venues' }
 	];
 </script>

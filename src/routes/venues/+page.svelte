@@ -2,6 +2,7 @@
 	import timelineData from '$lib/data/timeline_data.json';
 	import { activeGig } from '$lib/stores/modalStore';
 	import VenueChart from '$lib/components/VenueChart.svelte';
+	import LeafletMap from '$lib/components/LeafletMap.svelte';
 
 	// Filter Logic
 	const venueConfig = {
@@ -37,7 +38,17 @@
 		}
 	};
 
+	// Helper for Map Data
+	const venueCoords = {
+		'Golden Torch': [53.059, -2.215], // Tunstall
+		'Victoria Hall': [53.023, -2.176], // Hanley
+		'Trentham Gardens': [52.969, -2.203], // Trentham
+		'The Sugarmill': [53.022, -2.178], // Hanley
+		'The Wheatsheaf': [53.021, -2.177] // Hanley (Approx)
+	};
+
 	let venueProfiles = [];
+	let mapVenues = [];
 
 	// Process Data
 	const years = [
@@ -98,6 +109,15 @@
 		});
 	});
 
+	// Build Map Venues
+	mapVenues = venueProfiles.map((v) => ({
+		id: v.name,
+		name: v.name,
+		lat: venueCoords[v.name] ? venueCoords[v.name][0] : 53.0,
+		lng: venueCoords[v.name] ? venueCoords[v.name][1] : -2.2,
+		color: v.color
+	}));
+
 	function openGig(gig) {
 		let url = gig.url || '';
 		activeGig.set({
@@ -113,12 +133,26 @@
 	<div class="max-w-7xl mx-auto space-y-24">
 		<!-- Header -->
 		<div class="space-y-4 border-b border-zinc-800 pb-8">
-			<h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter text-white">
-				The Infrastructure
-			</h1>
-			<p class="text-xl md:text-2xl text-zinc-400 font-serif max-w-2xl leading-relaxed">
-				The rise and fall of the rooms that hosted the noise.
-			</p>
+			<div class="flex justify-between items-end">
+				<div>
+					<h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter text-white">
+						The Infrastructure
+					</h1>
+					<p class="text-xl md:text-2xl text-zinc-400 font-serif max-w-2xl leading-relaxed mt-4">
+						The rise and fall of the rooms that hosted the noise.
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- MAP SECTION -->
+		<div class="h-[400px] w-full border border-zinc-800 rounded-2xl overflow-hidden relative z-0">
+			<LeafletMap venues={mapVenues} activeVenueId={null} />
+			<div
+				class="absolute top-4 left-4 z-[400] bg-zinc-950/80 backdrop-blur px-3 py-1 rounded border border-zinc-800 text-[10px] font-mono text-zinc-400 uppercase tracking-widest"
+			>
+				Stoke-on-Trent • Spatial Archive
+			</div>
 		</div>
 
 		<!-- Venue Profiles (Chapters) -->

@@ -172,32 +172,37 @@
 						</span>
 					</div>
 
-					<!-- Cards Grid -->
-					<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+					<!-- Cards List (Rows) -->
+					<div class="flex flex-col gap-1">
 						{#each group.gigs as gig}
 							<button
-								class="text-left bg-zinc-100 p-4 shadow-[4px_4px_0_rgba(0,0,0,1)] hover:shadow-[6px_6px_0_rgba(245,158,11,1)] hover:-translate-y-0.5 transition-all duration-200 border-2 border-zinc-900 group"
-								style="filter: contrast(1.1) grayscale(1);"
+								class="flex items-center justify-between w-full text-left bg-zinc-900 border border-zinc-800 p-3 hover:bg-zinc-800 hover:border-zinc-600 transition-colors group/row"
 								onclick={() => openGig(gig)}
 							>
-								<div class="flex justify-between items-start mb-6 border-b-2 border-zinc-900 pb-2">
-									<span class="font-mono text-xs font-bold text-zinc-900">{gig.date}</span>
+								<div class="flex items-center gap-4">
+									<div
+										class="w-24 font-mono text-[10px] text-zinc-500 font-bold uppercase tracking-wider group-hover/row:text-zinc-400"
+									>
+										{gig.date}
+									</div>
+									<div
+										class="font-bold text-sm text-zinc-100 uppercase tracking-tight group-hover/row:text-amber-500 transition-colors"
+									>
+										{gig.venue.replace('The ', '')}
+									</div>
 									{#if gig.has_songs}
-										<span class="text-[10px] font-black uppercase bg-black text-white px-1"
-											>REC</span
+										<div
+											class="bg-amber-900/30 text-amber-500 text-[9px] px-1.5 py-0.5 rounded border border-amber-900/50 font-mono tracking-tighter"
 										>
+											REC
+										</div>
 									{/if}
 								</div>
 
-								<div class="h-12 flex flex-col justify-end">
-									<div
-										class="text-[10px] text-zinc-600 font-bold uppercase tracking-widest leading-none mb-1"
-									>
-										Venue
-									</div>
-									<div class="text-sm font-black text-zinc-900 uppercase leading-tight truncate">
-										{gig.venue}
-									</div>
+								<div
+									class="hidden sm:block text-[10px] text-zinc-600 uppercase font-mono tracking-widest group-hover/row:text-zinc-500"
+								>
+									View →
 								</div>
 							</button>
 						{/each}
