@@ -51,13 +51,25 @@ export async function load() {
             }
         });
 
-        let monthInt = 1;
         if (typeof row.Month === 'string') {
             const d = new Date(`${row.Month} 1, 2000`);
             if (!isNaN(d)) monthInt = d.getMonth() + 1;
         } else {
             monthInt = row.Month || 1;
         }
+
+        // Augment with Dummy Setlists
+        Object.values(entries).forEach(gig => {
+            if (gig && gig.has_songs && !gig.songs) {
+                gig.songs = [
+                    'Anarchy in the UK',
+                    'God Save the Queen',
+                    'Pretty Vacant',
+                    'Holiday in the Sun',
+                    'Bodies'
+                ];
+            }
+        });
 
         return {
             year: row.Year,

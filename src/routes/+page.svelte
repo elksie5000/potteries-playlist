@@ -253,7 +253,7 @@
 
 				<button
 					onclick={() => (showDetailedOnly = !showDetailedOnly)}
-					class="px-3 py-1 rounded border text-[10px] uppercase font-bold tracking-widest transition-colors flex items-center gap-2
+					class="px-3 py-1 rounded border text-[10px] uppercase font-bold tracking-widest transition-colors flex items-center gap-2 font-mono
 					{showDetailedOnly
 						? 'text-amber-500 border-amber-500/50 bg-amber-950/20'
 						: 'text-zinc-500 border-zinc-800 bg-zinc-900 hover:text-zinc-300'}"
@@ -261,7 +261,11 @@
 					<div
 						class="w-1.5 h-1.5 rounded-full {showDetailedOnly ? 'bg-amber-500' : 'bg-zinc-600'}"
 					></div>
-					{showDetailedOnly ? 'Setlists Only' : 'All Gigs'}
+					<span>
+						SETLISTS: <span class={showDetailedOnly ? 'text-amber-500' : 'text-zinc-600'}>
+							[{showDetailedOnly ? 'ON' : 'OFF'}]
+						</span>
+					</span>
 				</button>
 			</div>
 		</div>

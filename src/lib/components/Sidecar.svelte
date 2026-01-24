@@ -65,6 +65,16 @@
 							<div class="text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-2">
 								Setlist
 							</div>
+							{#if gig.songs && gig.songs.length > 0}
+								<div class="mb-4">
+									<ol class="list-decimal list-inside space-y-1">
+										{#each gig.songs as song}
+											<li class="text-zinc-300 text-sm font-bold tracking-tight">{song}</li>
+										{/each}
+									</ol>
+								</div>
+							{/if}
+
 							<p class="text-zinc-400 text-sm italic">
 								Setlist data available locally or via Setlist.fm link.
 							</p>
