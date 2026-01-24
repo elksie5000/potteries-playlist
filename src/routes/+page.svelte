@@ -297,7 +297,7 @@
 							class="w-full text-left p-3 rounded backdrop-blur-sm transition-all hover:scale-[1.02] hover:shadow-xl group/card border
                             {getVenueColor(gig.venue)}
                             {gig.has_songs ? 'border-l-4 border-l-amber-400 pl-4' : ''}"
-							onclick={() => openGig(gig)}
+							onclick={() => openDrawer('gig', gig)}
 						>
 							<div class="flex justify-between items-baseline mb-1">
 								<span class="text-[9px] font-bold text-zinc-400 uppercase tracking-wider"
