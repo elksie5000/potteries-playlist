@@ -88,7 +88,33 @@
 			{#if drawerState.type === 'gig'}
 				{@const gig = drawerState.data}
 				<div class="space-y-8">
-					<!-- Hero -->
+					<!-- Hero Visual (Placeholder) -->
+					<div
+						class="aspect-video w-full bg-zinc-900 border border-zinc-800 mb-6 relative overflow-hidden group"
+					>
+						<!-- Brutalist "No Signal" Pattern -->
+						<div
+							class="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,#18181b_10px,#18181b_20px)] opacity-50"
+						></div>
+						<div class="absolute inset-0 flex items-center justify-center">
+							<div class="text-center">
+								<div
+									class="text-4xl font-black text-zinc-800 uppercase tracking-tighter group-hover:text-zinc-700 transition-colors"
+								>
+									LIVE
+								</div>
+								<div class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.5em] mt-2">
+									Visual Missing
+								</div>
+							</div>
+						</div>
+						<!-- Scanline -->
+						<div
+							class="absolute inset-0 bg-gradient-to-b from-transparent via-zinc-800/10 to-transparent animate-scanline pointer-events-none"
+						></div>
+					</div>
+
+					<!-- Hero Info -->
 					<div in:receive={{ key: gig.id || gig.artist + gig.date }}>
 						<h1 class="text-4xl font-black text-white uppercase tracking-tighter leading-none mb-2">
 							{gig.artist}
@@ -152,6 +178,29 @@
 
 					<!-- Spacer -->
 					<div class="h-12 border-l border-dashed border-zinc-800 ml-2"></div>
+
+					<!-- Attribution Footer -->
+					<div
+						class="pt-8 border-t border-zinc-800 text-[10px] text-zinc-600 font-mono text-center pb-12"
+					>
+						<p class="mb-2 uppercase tracking-widest">Data Sources & Attribution</p>
+						<div class="flex flex-col gap-1 items-center">
+							<a
+								href="https://www.setlist.fm/"
+								target="_blank"
+								class="hover:text-zinc-400 underline decoration-zinc-800 underline-offset-4"
+							>
+								Setlists courtesy of Setlist.fm (CC BY-NC 3.0)
+							</a>
+							<a
+								href="https://en.wikipedia.org/"
+								target="_blank"
+								class="hover:text-zinc-400 underline decoration-zinc-800 underline-offset-4"
+							>
+								Artist data via Wikipedia (CC BY-SA 3.0)
+							</a>
+						</div>
+					</div>
 				</div>
 			{:else if drawerState.type === 'band'}
 				{@const band = drawerState.data}

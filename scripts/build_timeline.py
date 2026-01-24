@@ -104,7 +104,7 @@ def fetch_full_venue_history(venue_id, venue_name):
                         print("  Reached pre-1965 era. Stopping.")
                         return gigs
                     
-                    if year > 2015:
+                    if year > datetime.now().year:
                         continue # Skip future/too new
                         
                     # Check for Setlist Data (Songs)
@@ -150,7 +150,7 @@ def fetch_full_venue_history(venue_id, venue_name):
 # 3. Build Master List
 all_gigs = []
 
-print("Starting FULL HISTORICAL DEEP DIVE (1965-2015)...")
+print("Starting FULL HISTORICAL DEEP DIVE (1965-Present)...")
 
 for name, vid in VENUES.items():
     venue_gigs = fetch_full_venue_history(vid, name)
@@ -215,7 +215,8 @@ df = pd.DataFrame(normalized)
 pivot_df = df.pivot_table(index="Date", columns="Venue", values="Artist", aggfunc=lambda x: ", ".join(x)).fillna("")
 
 # Reindex
-full_range = pd.date_range(start="1965-01-01", end="2010-12-31")
+today_str = datetime.now().strftime("%Y-%m-%d")
+full_range = pd.date_range(start="1965-01-01", end=today_str)
 final_df = pivot_df.reindex(full_range).fillna("")
 
 final_df['Year'] = final_df.index.year
