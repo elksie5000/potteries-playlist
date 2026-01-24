@@ -60,15 +60,19 @@ export async function load() {
         }
 
         // Augment with Dummy Setlists
-        Object.values(entries).forEach(gig => {
-            if (gig && gig.has_songs && !gig.songs) {
-                gig.songs = [
-                    'Anarchy in the UK',
-                    'God Save the Queen',
-                    'Pretty Vacant',
-                    'Holiday in the Sun',
-                    'Bodies'
-                ];
+        Object.values(entries).forEach(gigList => {
+            if (Array.isArray(gigList)) {
+                gigList.forEach(gig => {
+                    if (gig && gig.has_songs && !gig.songs) {
+                        gig.songs = [
+                            'Anarchy in the UK',
+                            'God Save the Queen',
+                            'Pretty Vacant',
+                            'Holiday in the Sun',
+                            'Bodies'
+                        ];
+                    }
+                });
             }
         });
 
