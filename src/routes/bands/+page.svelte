@@ -8,6 +8,7 @@
 	let selectedLetter = $state('All');
 	let selectedGenre = $state('All');
 	let showSetlistsOnly = $state(false);
+	let searchQuery = $state('');
 
 	// --- Constants ---
 	const alphabet = ['All', ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')];
@@ -40,6 +41,11 @@
 
 		if (selectedGenre !== 'All') {
 			list = list.filter((g) => g.genre === selectedGenre);
+		}
+
+		if (searchQuery) {
+			const q = searchQuery.toLowerCase();
+			list = list.filter((g) => g.name.toLowerCase().includes(q));
 		}
 
 		if (showSetlistsOnly) {
@@ -111,6 +117,21 @@
 					>
 						Setlists Only
 					</button>
+				</div>
+				<!-- Search -->
+				<div class="relative w-48 md:w-64">
+					<input
+						type="text"
+						bind:value={searchQuery}
+						placeholder="FIND BAND..."
+						class="w-full bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs px-3 py-1 rounded focus:outline-none focus:border-amber-500 uppercase font-mono tracking-wider"
+					/>
+					{#if searchQuery}
+						<button
+							onclick={() => (searchQuery = '')}
+							class="absolute right-2 top-0.5 bottom-0 text-zinc-500 hover:text-white">✕</button
+						>
+					{/if}
 				</div>
 			</div>
 		</header>
