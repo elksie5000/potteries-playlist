@@ -13,6 +13,12 @@
 	});
 </script>
 
+<svelte:window
+	onkeydown={(e) => {
+		if (e.key === 'Escape') closeDrawer();
+	}}
+/>
+
 {#if drawerState}
 	<!-- Backdrop (Optional, keeps focus or allows click-away) -->
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -90,16 +96,49 @@
 						</div>
 					{/if}
 
-					<!-- Spacer for content expansion -->
+					<!-- Spacer -->
 					<div class="h-12 border-l border-dashed border-zinc-800 ml-2"></div>
 				</div>
 			{:else if drawerState.type === 'band'}
 				{@const band = drawerState.data}
-				<div class="space-y-6">
-					<h1 class="text-3xl font-black text-white uppercase tracking-tighter">
-						{band.name}
-					</h1>
-					<!-- Band specifics would go here -->
+				<div class="space-y-8">
+					<div in:receive={{ key: 'band-' + band.name }}>
+						<h1 class="text-3xl font-black text-white uppercase tracking-tighter mb-4">
+							{band.name}
+						</h1>
+						<div
+							class="inline-block px-2 py-0.5 rounded border border-zinc-700 bg-zinc-900 text-xs font-mono text-zinc-400"
+						>
+							{band.genre}
+						</div>
+					</div>
+
+					<!-- Gig List -->
+					<div>
+						<h3
+							class="text-zinc-500 font-bold uppercase text-xs tracking-widest mb-4 border-b border-zinc-800 pb-2"
+						>
+							Performance History ({band.gigs.length})
+						</h3>
+						<div class="space-y-3">
+							{#each band.gigs as gig}
+								<button
+									class="w-full text-left p-3 bg-zinc-900/50 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-600 transition-all rounded flex justify-between items-center group"
+									onclick={() => activeDrawer.set({ type: 'gig', data: gig })}
+								>
+									<div>
+										<div class="text-[10px] font-mono text-zinc-500 uppercase">{gig.date}</div>
+										<div
+											class="font-bold text-zinc-200 text-sm group-hover:text-amber-500 transition-colors"
+										>
+											{gig.venue.replace('The ', '')}
+										</div>
+									</div>
+									<div class="text-zinc-600 group-hover:text-amber-500 text-xs">→</div>
+								</button>
+							{/each}
+						</div>
+					</div>
 				</div>
 			{:else}
 				<div class="text-zinc-500 font-mono text-xs">
