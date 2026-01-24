@@ -6,9 +6,8 @@
 	let map;
 	let leafletLib;
 
-	export let venue; // { lat, lng, name, id }
-	export let venue; // { lat, lng, name, id }
-	// gigs removed as it was unused and causing warnings
+	export let venue = null; // Optional: Center/Active venue
+	export let venues = []; // Optional: List of all venues to plot
 
 	onMount(async () => {
 		if (browser) {
@@ -26,7 +25,19 @@
 
 			if (!mapElement) return;
 
-			map = L.map(mapElement).setView([venue.lat, venue.lng], 15);
+			// Default Center (Stoke)
+			let center = [53.0037, -2.1794];
+			let zoom = 12;
+
+			if (venue) {
+				center = [venue.lat, venue.lng];
+				zoom = 15;
+			} else if (venues.length > 0) {
+				// Center roughly on the first one or calculate bounds?
+				// Just keep it simple: Stoke center.
+			}
+
+			map = L.map(mapElement).setView(center, zoom);
 
 			L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
 				attribution:
@@ -38,21 +49,22 @@
 			// Helper to force grayscale
 			mapElement.style.filter = 'grayscale(100%) invert(100%) contrast(1.2)';
 
-			updateMap(venue);
+			updateMap();
 		}
 	});
 
-	$: if (map && venue && leafletLib) {
-		updateMap(venue);
+	$: if (map && leafletLib && (venue || venues.length)) {
+		updateMap();
 	}
 
-	function updateMap(v) {
+	function updateMap() {
 		if (!map || !leafletLib) return;
-
 		const L = leafletLib;
 
-		// Update view
-		map.setView([v.lat, v.lng], 15, { animate: true });
+		// Move view if specific venue selected
+		if (venue) {
+			map.setView([venue.lat, venue.lng], 15, { animate: true });
+		}
 
 		// Clear markers
 		map.eachLayer((layer) => {
@@ -61,24 +73,14 @@
 			}
 		});
 
-		// Add correct marker
-		if (v.special) {
-			const pulseIcon = L.divIcon({
-				className: 'custom-div-icon',
-				html: `<div style="background-color: #facc15; width: 40px; height: 40px; border-radius: 50%; border: 4px solid #000; animation: pulse 1s infinite; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px;">⚡</div>`,
-				iconSize: [40, 40],
-				iconAnchor: [20, 20]
-			});
+		// Determine what to plot
+		const points = venues.length > 0 ? venues : venue ? [venue] : [];
 
-			L.marker([v.lat, v.lng], { icon: pulseIcon })
-				.addTo(map)
-				.bindPopup(
-					`<div style="text-align:center;"><b style="font-size: 1.2em; color: #facc15; text-transform: uppercase;">${v.special}</b><br><span style="font-weight:900;">${v.name}</span><br>${v.era}</div>`
-				)
-				.openPopup();
-		} else {
-			L.marker([v.lat, v.lng]).addTo(map).bindPopup(`<b>${v.name}</b><br>${v.era}`).openPopup();
-		}
+		points.forEach((v) => {
+			// Simple logic: if it's the active 'venue', maybe highlight it?
+			// For now, just plot them all.
+			L.marker([v.lat, v.lng]).addTo(map).bindPopup(`<b>${v.name}</b>`);
+		});
 	}
 
 	onDestroy(() => {

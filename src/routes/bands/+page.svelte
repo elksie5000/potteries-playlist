@@ -13,10 +13,65 @@
 	const alphabet = ['All', ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')];
 	const genres = ['Rock', 'Soul', 'Punk', 'Indie', 'Rave', 'Ska/Two-Tone'];
 
-// ... (in helpers) same getGenre loop ...
+	// --- Helpers ---
+	function getGenre(artist) {
+		// Stable hash
+		let hash = 0;
+		for (let i = 0; i < artist.length; i++) {
+			hash = artist.charCodeAt(i) + ((hash << 5) - hash);
+		}
+		return genres[Math.abs(hash) % genres.length];
+	}
 
-// ... (in markup loop) ...
-							return list;
+	// --- Derived ---
+	let groupedArtists = $derived.by(() => {
+		// 1. Group by Artist from data.archive
+		const groups = {};
+		data.archive.forEach((gig) => {
+			if (!groups[gig.artist]) {
+				groups[gig.artist] = {
+					name: gig.artist,
+					genre: getGenre(gig.artist),
+					gigs: []
+				};
+			}
+			groups[gig.artist].gigs.push(gig);
+		});
+
+		// 2. Convert to Array and Sort
+		let list = Object.values(groups).sort((a, b) => a.name.localeCompare(b.name));
+
+		// 3. Filter
+		if (selectedLetter !== 'All') {
+			list = list.filter((g) => g.name.toUpperCase().startsWith(selectedLetter));
+		}
+
+		if (selectedGenre !== 'All') {
+			list = list.filter((g) => g.genre === selectedGenre);
+		}
+
+		if (showSetlistsOnly) {
+			list = list
+				.map((g) => ({
+					...g,
+					gigs: g.gigs.filter((gig) => gig.has_songs)
+				}))
+				.filter((g) => g.gigs.length > 0);
+		}
+
+        // 4. Group by Letter for the Loop
+        const letters = {};
+        list.forEach(g => {
+            const l = g.name[0].toUpperCase();
+            if (!letters[l]) letters[l] = [];
+            letters[l].push(g);
+        });
+
+        // 5. Return Array for #each
+		return Object.keys(letters).sort().map(l => ({
+            letter: l,
+            artists: letters[l]
+        }));
 	});
 </script>
 
@@ -108,7 +163,6 @@
 			{/if}
 
 			<div class="h-24"></div>
-			<!-- Footer padding -->
 		</div>
 	</main>
 </div>
