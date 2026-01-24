@@ -3,42 +3,42 @@ export const classicGigs = [
         artist: "David Bowie",
         venue: "Victoria Hall, Hanley",
         date: "1973-05-29",
-        notes: "The Ziggy Stardust Tour. Bowie at the height of his powers. Tickets cost less than a pound.",
+        notes: "The Ziggy Stardust Tour. Tickets were £1. We didn't know it then, but this was the peak.",
         tags: ["Glam", "Legend"]
+    },
+    {
+        artist: "Sex Pistols",
+        venue: "76 Club, Burton",
+        date: "1976-09-24",
+        notes: "The bootleg they call 'Anarchy in the UK'. Technically Staffordshire, spiritually Stoke. The gig that launched a thousand bands.",
+        tags: ["Punk", "Bootleg"]
+    },
+    {
+        artist: "INXS",
+        venue: "Victoria Hall, Hanley",
+        date: "1984-05-15",
+        notes: "The night Michael Hutchence decided the stage wasn't enough and scaled the balcony. A frontman operating without a safety net.",
+        tags: ["Rock", "Iconic"]
     },
     {
         artist: "Motörhead",
         venue: "Port Vale FC (Vale Park)",
         date: "1981-08-01",
-        notes: "The 'Heavy Metal Holocaust'. Lemmy returned to his home turf to headline a bill that included Ozzy Osbourne. The PA system was reportedly audible in Burslem.",
+        notes: "The 'Heavy Metal Holocaust'. Lemmy coming home. The noise complaints reportedly spanned three towns.",
         tags: ["Metal", "Homecoming"]
     },
     {
         artist: "Oasis",
         venue: "The Wheatsheaf",
         date: "1994-04-11",
-        notes: "Historic. Played the same day their debut single 'Supersonic' was released. The calm before the Britpop storm.",
-        tags: ["Britpop", "Debut"]
-    },
-    {
-        artist: "Led Zeppelin",
-        venue: "Trentham Gardens",
-        date: "1973-01-15",
-        notes: "A gig that spawned bootleg legends. Robert Plant and Jimmy Page tearing through 'Whole Lotta Love' in a ballroom usually reserved for tea dances.",
-        tags: ["Rock", "Heavy"]
+        notes: "Played the very day 'Supersonic' was released. You could feel the air pressure change in the room.",
+        tags: ["Britpop", "History"]
     },
     {
         artist: "The Who",
         venue: "The Place, Hanley",
         date: "1965-05-01",
-        notes: "Before it became a nightclub legend, The Place hosted the loudest band in the world. Mod culture at its peak.",
+        notes: "Maximum R&B in a basement club. Keith Moon destroying the kit before it was a cliché.",
         tags: ["Mod", "60s"]
-    },
-    {
-        artist: "Coldplay",
-        venue: "The Sugarmill",
-        date: "2000-01-29",
-        notes: "The Parachutes tour. Chris Martin playing to a few hundred people months before 'Yellow' changed everything.",
-        tags: ["Indie", "Intimate"]
     }
 ];

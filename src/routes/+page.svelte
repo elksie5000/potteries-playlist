@@ -318,55 +318,55 @@
 			<!-- PROSE -->
 			<div class="mb-16 border-l-4 border-amber-500 pl-6 md:pl-12 py-2 text-left">
 				<h2
-					class="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-6 leading-[0.9]"
+					class="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-4 leading-[0.9]"
 				>
-					The Lost <br /> <span class="text-amber-500">Tapes</span>
+					The World's Gone <br /> <span class="text-amber-500">To Sh*t.</span>
 				</h2>
+				<p class="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-8">
+					(It's no coincidence it happened after he died)
+				</p>
 				<div
 					class="prose prose-invert prose-sm md:prose-base text-zinc-400 space-y-4 font-mono leading-relaxed max-w-2xl"
 				>
 					<p>
-						This project began in the silence following January 10, 2016. The death of <strong
-							class="text-white">David Bowie</strong
-						>
-						didn’t just stop the music; it triggered a forensic audit of memory. Amid the global tributes,
-						a local fact resurfaced: the Starman had walked among us. He played
-						<span class="text-white bg-zinc-900 px-1">Victoria Hall</span> in 1973, at the absolute zenith
-						of Glam Rock.
+						So said Gary Oldman after the death of <strong>David Bowie</strong> on January 10, 2016. His
+						death didn’t just stop the music; it was going to be the start of a data story about North
+						Staffordshire's place in live music history.
 					</p>
 					<p>
-						It raised a question: <em>Who else?</em>
+						But life—and deadlines—intervened. The project stalled while I worked in data for <em
+							class="text-white">The Sentinel</em
+						>. The source code sat in storage for a decade, gathering digital dust.
 					</p>
 					<p>
-						The answer lay buried in the <a
-							href="https://www.setlist.fm"
-							target="_blank"
-							class="text-amber-500 hover:underline">setlist.fm</a
-						> database. Over 2,500 gigs. A timeline that proves Stoke-on-Trent wasn't just a flyover state
-						for rock and roll—it was a crucible.
+						Yet amid the global tributes, a local fact refused to fade: The Starman had walked among
+						us. He played <span class="text-white bg-zinc-900 px-1">Victoria Hall</span> in 1973, at
+						the absolute zenith of Glam Rock. It raised a question: <em>Who else?</em>
+					</p>
+					<p>
+						The answer lay buried in the <strong>setlist.fm</strong> database. Over 2,500 gigs. A timeline
+						that proves Stoke-on-Trent and the surrounding area wasn't just a flyover state for rock and
+						roll—it was a crucible.
 					</p>
 					<p>
 						From the sweaty walls of <strong class="text-white">The Golden Torch</strong> in
 						Tunstall where Northern Soul found its feet, to
-						<strong class="text-white">The Place</strong>
-						in Hanley hosting The Who. We hosted the chaos of the
-						<strong class="text-white">Sex Pistols</strong>
-						era (often misremembered, but never forgotten) and the anthems of
-						<strong class="text-white">Oasis</strong>
-						at the Wheatsheaf on the very day they released <em>Supersonic</em>.
+						<strong class="text-white">Michael Hutchence</strong>
+						climbing the balcony at Victoria Hall. We hosted the chaos of the
+						<strong class="text-white">Sex Pistols</strong> era (echoing from the 76 Club in Burton)
+						and the anthems of <strong class="text-white">Oasis</strong> at the Wheatsheaf on the
+						very day they released <em>Supersonic</em>.
 					</p>
-					<p class="text-amber-500 font-bold uppercase tracking-widest text-xs">
-						This is not nostalgia. It is evidence.
-					</p>
+					<p>This is not nostalgia. It's not complete. But it is evidence.</p>
 				</div>
 			</div>
 
 			<!-- KEY EVIDENCE GRID (Compact) -->
-			<div class="w-full text-left">
+			<div class="w-full text-left mb-16">
 				<h3
 					class="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-6 border-b border-zinc-800 pb-2"
 				>
-					Key Evidence type: Class A
+					Key Evidence (Featured Gigs)
 				</h3>
 				<div class="grid grid-cols-1 gap-4">
 					{#each classicGigs as classic}
@@ -406,6 +406,40 @@
 							</div>
 						</button>
 					{/each}
+				</div>
+			</div>
+
+			<!-- GEOGRAPHY SECTION -->
+			<div class="w-full text-left mb-10">
+				<h3
+					class="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-6 border-b border-zinc-800 pb-2"
+				>
+					The Geography
+				</h3>
+				<div class="space-y-8">
+					<div class="pl-4 border-l-2 border-zinc-800 hover:border-amber-500 transition-colors">
+						<h3 class="text-white font-bold uppercase mb-1">The Golden Torch (Tunstall)</h3>
+						<p class="text-sm text-zinc-400 font-mono">
+							The spiritual home of Northern Soul. Before Wigan Casino, there was The Torch.
+							All-nighters that ran on sweat, talcum powder, and rare vinyl imports. Closed by the
+							council in '73, but never extinguished.
+						</p>
+					</div>
+					<div class="pl-4 border-l-2 border-zinc-800 hover:border-purple-500 transition-colors">
+						<h3 class="text-white font-bold uppercase mb-1">Victoria Hall (Hanley)</h3>
+						<p class="text-sm text-zinc-400 font-mono">
+							The Grand Dame. Built for acoustics, tested by volume. From Bowie to The Stones, this
+							is where the heavyweights played when they needed a room that commanded respect.
+						</p>
+					</div>
+					<div class="pl-4 border-l-2 border-zinc-800 hover:border-emerald-500 transition-colors">
+						<h3 class="text-white font-bold uppercase mb-1">The Sugarmill</h3>
+						<p class="text-sm text-zinc-400 font-mono">
+							The survivor. A roof terrace, a sticky floor, and a stage that has launched a thousand
+							indie careers. If a band broke in the UK between 1995 and today, they played here
+							first.
+						</p>
+					</div>
 				</div>
 			</div>
 
