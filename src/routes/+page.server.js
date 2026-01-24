@@ -51,6 +51,7 @@ export async function load() {
             }
         });
 
+        let monthInt = 1;
         if (typeof row.Month === 'string') {
             const d = new Date(`${row.Month} 1, 2000`);
             if (!isNaN(d)) monthInt = d.getMonth() + 1;
