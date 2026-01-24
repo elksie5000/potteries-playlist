@@ -350,7 +350,7 @@
 									class="w-full text-left p-3 rounded backdrop-blur-sm transition-all hover:scale-[1.02] hover:shadow-xl group/card border
 									{getVenueColor(gig.venue)}
 									{gig.has_songs ? 'border-l-4 border-l-amber-400 pl-4' : ''}
-									absolute top-0 left-0"
+									"
 									onclick={() => openDrawer('gig', gig)}
 									out:send={{ key: gig.id || gig.artist + gig.date }}
 								>
