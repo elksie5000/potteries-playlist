@@ -1,4 +1,5 @@
 <script>
+	// Trigger rebuild
 	import { openDrawer, activeDrawer } from '$lib/stores/navigation';
 	import { newsEvents } from '$lib/config/news-config';
 	import { classicGigs } from '$lib/data/classics';
@@ -330,8 +331,8 @@
 					This project began in the silence following January 10, 2016. The death of <strong
 						class="text-white">David Bowie</strong
 					>
-					didn’t just stop the music; it triggered a forensic audit of memory. Amid the global
-					tributes, a local fact resurfaced: the Starman had walked among us. He played
+					didn’t just stop the music; it triggered a forensic audit of memory. Amid the global tributes,
+					a local fact resurfaced: the Starman had walked among us. He played
 					<span class="text-white bg-zinc-900 px-1">Victoria Hall</span> in 1973, at the absolute zenith
 					of Glam Rock.
 				</p>
