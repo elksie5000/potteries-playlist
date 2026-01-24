@@ -69,38 +69,29 @@
 
 		<!-- Scrollable Content -->
 		<div class="flex-1 overflow-y-auto no-scrollbar p-4">
-			{#each data.groupedArtists as { letter, artists }}
+			{#each groupedArtists as { letter, artists }}
 				<section class="mb-8" transition:fade={{ duration: 150 }}>
 					<h2 class="text-2xl font-black text-zinc-700 uppercase mb-4">{letter}</h2>
 					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-						{#each artists as artist}
+						{#each artists as group}
 							<button
 								class="flex items-center justify-between w-full text-left bg-zinc-900 border border-zinc-800 p-3 hover:bg-zinc-800 hover:border-zinc-600 transition-colors group/row"
-								onclick={() => openDrawer('artist', artist)}
+								onclick={() => openDrawer('band', group)}
 							>
 								<div class="flex items-center gap-4">
 									<div
-										class="w-24 font-mono text-[10px] text-zinc-500 font-bold uppercase tracking-wider group-hover/row:text-zinc-400"
+										class="w-12 font-mono text-[10px] text-zinc-500 font-bold uppercase tracking-wider group-hover/row:text-zinc-400"
 									>
-										{gig.date}
+										{group.gigs.length} Gigs
 									</div>
 									<div
-										class="font-bold text-sm text-zinc-100 uppercase tracking-tight group-hover/row:text-amber-500 transition-colors"
+										class="font-black text-lg text-zinc-100 uppercase tracking-tight group-hover/row:text-amber-500 transition-colors truncate"
 									>
-										{gig.venue.replace('The ', '')}
+										{group.name}
 									</div>
-									{#if gig.has_songs}
-										<div
-											class="bg-amber-900/30 text-amber-500 text-[9px] px-1.5 py-0.5 rounded border border-amber-900/50 font-mono tracking-tighter"
-										>
-											REC
-										</div>
-									{/if}
 								</div>
-
-								<div
-									class="hidden sm:block text-[10px] text-zinc-600 uppercase font-mono tracking-widest group-hover/row:text-zinc-500"
-								>
+								
+								<div class="hidden sm:block text-[10px] text-zinc-600 uppercase font-mono tracking-widest group-hover/row:text-zinc-500">
 									View →
 								</div>
 							</button>

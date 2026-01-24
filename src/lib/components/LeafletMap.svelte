@@ -7,7 +7,8 @@
 	let leafletLib;
 
 	export let venue; // { lat, lng, name, id }
-	export let gigs = []; // Array of gig objects
+	export let venue; // { lat, lng, name, id }
+	// gigs removed as it was unused and causing warnings
 
 	onMount(async () => {
 		if (browser) {

@@ -6,12 +6,30 @@
 	let { data } = $props();
 
 	// --- STATE ---
-	// Extract unique values immediately
-	const uniqueDecades = Array.from(new Set(data.decades)).sort((a, b) => a - b);
-	const uniqueVenues = Array.from(new Set(data.archive.map((g) => g.venue))).sort();
+	// --- STATE ---
+	// Extract unique values reactively
+	let uniqueDecades = $derived(Array.from(new Set(data.decades)).sort((a, b) => a - b));
+	let uniqueVenues = $derived(Array.from(new Set(data.archive.map((g) => g.venue))).sort());
 
-	let allDecades = $state(uniqueDecades);
-	let allVenues = $state(uniqueVenues);
+	// Initialize filters (We need to update this logic since filters are stateful but data might change)
+	// For simplicity in this Svelte 5 migration, we will keep selectedDecades/Venues as independent state
+	// initialized once, but we need to watch out for data changes.
+	// Actually, let's keep it simple.
+
+	// To silence the warning and ensure correctness:
+	// We'll calculate these on init.
+	// The warning is: "reference only captures the initial value".
+
+	// We can just suppress it if we know data won't change, OR use $derived.
+	// Let's use $derived for the source lists.
+
+	// But `allDecades` and `allVenues` were separate mutable state?
+	// Looking at the code: `let allDecades = $state(uniqueDecades);`
+
+	// Let's just fix the variables.
+
+	let allDecades = $derived(Array.from(new Set(data.decades)).sort((a, b) => a - b));
+	let allVenues = $derived(Array.from(new Set(data.archive.map((g) => g.venue))).sort());
 
 	// Initialize filters with ALL content selected
 	let selectedDecades = $state(new Set(uniqueDecades));
