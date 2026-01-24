@@ -294,11 +294,11 @@
 		{#if item.type === 'year'}
 			<!-- YEAR SECTION -->
 			<section
-				class="h-full min-w-[320px] max-w-[400px] border-r border-zinc-900 bg-zinc-950 relative snap-start flex flex-col pt-32 pb-8 px-6 group transition-colors hover:bg-zinc-900/20"
+				class="h-full min-w-[320px] max-w-[400px] border-r border-zinc-900 bg-zinc-950 relative snap-start flex flex-col pt-64 pb-8 px-6 group transition-colors hover:bg-zinc-900/20"
 			>
 				<!-- Year Background -->
 				<div
-					class="absolute top-8 left-4 text-[120px] font-black text-zinc-900 select-none z-0 leading-none transition-colors group-hover:text-zinc-800/80"
+					class="absolute top-40 left-4 text-[120px] font-black text-zinc-900 select-none z-0 leading-none transition-colors group-hover:text-zinc-800/80"
 				>
 					{item.year}
 				</div>
