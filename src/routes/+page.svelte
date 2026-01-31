@@ -299,9 +299,9 @@
 		class="min-w-full md:min-w-[80vw] h-full snap-center flex flex-col justify-center items-center bg-zinc-950 relative border-r border-zinc-900"
 	>
 		<h1
-			class="text-6xl md:text-9xl font-black text-white uppercase tracking-tighter text-center leading-none z-10 mt-48 md:mt-64"
+			class="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter text-center leading-none z-10 mt-48 md:mt-64"
 		>
-			The<br />Potteries<br /><span class="text-amber-600">Playlist</span>
+			The Potteries<br /><span class="text-amber-600">Playlist</span>
 		</h1>
 		<p class="mt-6 text-zinc-500 font-mono tracking-[0.3em] text-xs uppercase z-10">
 			1965 — Present • The Live Archive

@@ -95,7 +95,7 @@
 	<main class="flex-1 flex flex-col overflow-hidden">
 		<!-- Header -->
 		<header
-			class="flex-shrink-0 bg-zinc-900 border-b border-zinc-800 p-4 flex items-center justify-between z-10"
+			class="flex-shrink-0 bg-zinc-900 border-b border-zinc-800 p-4 pt-24 flex items-center justify-between z-10"
 		>
 			<div class="flex items-center gap-4 pl-20 md:pl-0">
 				<h1 class="text-xl font-black text-zinc-100 uppercase tracking-tight">Bands</h1>
